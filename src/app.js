@@ -22,18 +22,16 @@ class btw extends Client {
   constructor() {
     super({
       intents: [
-        // Keep whatever other strings you had here originally, just ensure these are included:
         "Guilds",
         "GuildMessages",
         "MessageContent",
-        "DirectMessages" 
-      ],
+        "DirectMessages"
+      ], // 🌟 Make sure there is a comma right here after this bracket!
       partials: [
-        "Channel", // ✨ Changed to a string to match btw's style
-        "Message"  // ✨ Changed to a string to match btw's style
+        "Channel",
+        "Message"
       ]
     });
-
         
         GatewayIntentBits.Guilds,                        
         GatewayIntentBits.GuildMembers,                 
