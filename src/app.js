@@ -444,3 +444,6 @@ try {
 }
 
 export default TitanBot;
+
+GatewayIntentBits.Guilds,
+GatewayIntentBits.GuildMembers,
