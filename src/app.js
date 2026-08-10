@@ -37,7 +37,7 @@ class TitanBot extends Client {
     }
 }
 
-
+ 
         GatewayIntentBits.Guilds,                        
         GatewayIntentBits.GuildMembers,                 
 
@@ -444,6 +444,3 @@ try {
 }
 
 export default TitanBot;
-
-GatewayIntentBits.Guilds,
-GatewayIntentBits.GuildMembers,
