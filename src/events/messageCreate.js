@@ -1,4 +1,4 @@
-import { Events } from 'discord.js';
+import { Events, ChannelType } from 'discord.js';
 import { logger } from '../utils/logger.js';
 import { getLevelingConfig, getUserLevelData } from '../services/leveling/leveling.js';
 import { addXp } from '../services/leveling/xpSystem.js';
@@ -18,6 +18,35 @@ import {
   isValidCountingMessage,
   recordCorrectCount,
 } from '../services/countingGameService.js';
+
+
+export default {
+    name: Events.MessageCreate,
+    async execute(message) {
+        // === FLOW 2: Forward User DM to Server Staff Channel ===
+        if (message.channel.type === ChannelType.DM) {
+            if (message.author.bot) return;
+
+            try {
+                const staffChannelId = process.env.STAFF_CHANNEL_ID;
+                if (!staffChannelId) return;
+
+                const staffChannel = await message.client.channels.fetch(staffChannelId);
+                if (!staffChannel) return;
+
+                const forwardMessage = `📩 **New Modmail** from ${message.author.tag} (\`${message.author.id}\`):\n${message.content}`;
+                await staffChannel.send(forwardMessage);
+                
+                await message.author.send('✅ Your message has been sent to the staff team.');
+            } catch (error) {
+                console.error('Error handling incoming DM:', error);
+            }
+            return; // Stops execution so it doesn't try to run guild commands in DMs
+        }
+
+        // ... Keep the rest of your original TitanBot messageCreate code here ...
+    },
+};
 
 const MESSAGE_XP_RATE_LIMIT_ATTEMPTS = 12;
 const MESSAGE_XP_RATE_LIMIT_WINDOW_MS = 10000;
