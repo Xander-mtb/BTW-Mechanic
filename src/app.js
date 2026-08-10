@@ -1,5 +1,5 @@
 ﻿import 'dotenv/config';
-import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import express from 'express';
 import cron from 'node-cron';
@@ -22,6 +22,17 @@ class TitanBot extends Client {
   constructor() {
     super({
       intents: [
+        // Keep whatever strings are already here, just add a comma and append:
+        "Guilds",
+        "GuildMessages",
+        "MessageContent",
+        "DirectMessages" // 🌟 ADD THIS INTENT AS A STRING
+      ],
+      partials: [
+        Partials.Channel, // 🌟 ADD THIS PARTIAL
+        Partials.Message  // 🌟 ADD THIS PARTIAL
+      ]
+    });
         
         GatewayIntentBits.Guilds,                        
         GatewayIntentBits.GuildMembers,                 
