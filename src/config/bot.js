@@ -141,7 +141,7 @@ export const botConfig = {
     },
     footer: {
       // Default footer text used in bot embeds.
-      text: "BTW-Mechanic",
+      text: "Titan Bot",
       // Footer icon URL (null = no icon).
       icon: null,
     },
@@ -161,18 +161,18 @@ export const botConfig = {
   economy: {
     currency: {
       // Currency display name.
-      name: "Chainlinks",
+      name: "coins",
       // Plural display name.
-      namePlural: "Chainlinks",
+      namePlural: "coins",
       // Currency symbol shown in balances.
-      symbol: "🔗",
+      symbol: "$",
     },
 
     // Starting balance for new users.
     startingBalance: 0,
 
     // Maximum bank amount before upgrades (if upgrades are used).
-    baseBankCapacity: 1000 00,
+    baseBankCapacity: 100000,
 
     // Daily reward amount.
     dailyAmount: 100,
@@ -450,16 +450,16 @@ export const botConfig = {
   features: {
     // Core systems.
     economy: true,
-    leveling: false,
+    leveling: true,
     moderation: true,
     logging: true,
     welcome: true,
 
     // Community engagement systems.
     tickets: true,
-    giveaways: false,
+    giveaways: true,
     birthday: true,
-    counter: false,
+    counter: true,
 
     // Security and self-service systems.
     verification: true,
