@@ -1,6 +1,6 @@
-const { ApplicationCommandOptionType } = require('discord.js');
+import { ApplicationCommandOptionType } from 'discord.js';
 
-module.exports = {
+export default {
     name: 'reply',
     description: 'Reply to a user via the bot DMs',
     options: [
