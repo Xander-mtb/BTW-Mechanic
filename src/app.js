@@ -1,4 +1,5 @@
-async updateAllCounters() {
+import 'dotenv/config';
+import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
   if (!this.db) {
     logger.warn('Database not available for counter updates');
     return;
@@ -55,3 +56,4 @@ async updateAllCounters() {
     }
   }
 }
+export default TitanBot;
