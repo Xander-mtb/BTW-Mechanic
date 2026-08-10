@@ -449,31 +449,31 @@ export const botConfig = {
   // Set any feature to `false` to disable it globally.
   features: {
     // Core systems.
-    economy: false,
+    economy: true,
     leveling: false,
-    moderation: false,
-    logging: false,
-    welcome: false,
+    moderation: true,
+    logging: true,
+    welcome: true,
 
     // Community engagement systems.
-    tickets: false,
+    tickets: true,
     giveaways: false,
     birthday: true,
     counter: false,
 
     // Security and self-service systems.
-    verification: false,
-    reactionRoles: false,
-    joinToCreate: false,
+    verification: true,
+    reactionRoles: true,
+    joinToCreate: true,
 
     // Utility/quality-of-life modules.
-    voice: false,
-    search: false,
-    tools: false,
-    utility: false,
-    community: false,
-    fun: false,
-    music: false,
+    voice: true,
+    search: true,
+    tools: true,
+    utility: true,
+    community: true,
+    fun: true,
+    music: true,
   },
 };
 
