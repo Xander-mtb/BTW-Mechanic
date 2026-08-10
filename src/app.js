@@ -18,21 +18,26 @@ import { shutdownMusic } from './services/music/playerHandler.js';
 import pkg from '../package.json' with { type: 'json' };
 import { EXPECTED_SCHEMA_VERSION, EXPECTED_SCHEMA_LABEL } from './config/database/schemaVersion.js';
 
-class btw extends Client {
-  constructor() {
-    super({
-      intents: [
-        "Guilds",
-        "GuildMessages",
-        "MessageContent",
-        "DirectMessages"
-      ], // 🌟 Make sure there is a comma right here after this bracket!
-      partials: [
-        "Channel",
-        "Message"
-      ]
-    });
-        
+class TitanBot extends Client {
+    constructor() {
+        super({
+            intents: [
+                "Guilds",
+                "GuildMessages",
+                "MessageContent",
+                "DirectMessages"
+            ],
+            partials: [
+                "Channel",
+                "Message"
+            ]
+        });
+
+        this.commands = new Collection();
+    }
+}
+
+
         GatewayIntentBits.Guilds,                        
         GatewayIntentBits.GuildMembers,                 
 
