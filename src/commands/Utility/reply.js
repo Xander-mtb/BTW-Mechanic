@@ -1,22 +1,21 @@
-import { ApplicationCommandOptionType } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 
 export default {
-    name: 'reply',
-    description: 'Reply to a user via the bot DMs',
-    options: [
-        {
-            name: 'user_id',
-            type: ApplicationCommandOptionType.String,
-            description: 'The Discord ID of the user you want to reply to',
-            required: true,
-        },
-        {
-            name: 'message',
-            type: ApplicationCommandOptionType.String,
-            description: 'The message you want to send to the user',
-            required: true,
-        }
-    ],
+    data: new SlashCommandBuilder()
+        .setName('reply')
+        .setDescription('Reply to a user via the bot DMs')
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages) // Restricts visibility to Staff
+        .addStringOption(option =>
+            option.setName('user_id')
+                .setDescription('The Discord ID of the user you want to reply to')
+                .setRequired(true)
+        )
+        .addStringOption(option =>
+            option.setName('message')
+                .setDescription('The message you want to send to the user')
+                .setRequired(true)
+        ),
+
     async execute(interaction) {
         const staffChannelId = process.env.STAFF_CHANNEL_ID;
         
