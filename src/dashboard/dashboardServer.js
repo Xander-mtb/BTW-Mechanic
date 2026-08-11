@@ -51,14 +51,20 @@ router.get('/', (req, res) => {
                 color: white;
                 min-height: 100vh;
             }
-                    .navbar {
+                    .sidebar {
     background: rgba(10, 10, 18, 0.85);
     border-bottom: 1px solid #2a1748;
-    padding: 18px 30px;
+    padding: 24px 18px;
+    width: 240px;
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #242438;
+    flex-direction: column;
+    gap: 24px;
+    border-right: 1px solid #242438;
 }
 
                     .brand {
@@ -70,6 +76,7 @@ router.get('/', (req, res) => {
                     }
 
                     .logout {
+    margin-top: auto;
     background: #6d28d9;
     color: white;
     text-decoration: none;
@@ -84,8 +91,8 @@ router.get('/', (req, res) => {
 
                     .container {
     max-width: 1200px;
-    margin: 50px auto;
-    padding: 0 24px;
+    margin: 50px 40px 50px 280px;
+    padding: 20px;
 }
 
                     .subtitle {
@@ -105,7 +112,7 @@ router.get('/', (req, res) => {
     padding: 30px;
     border-radius: 16px;
     border: 1px solid #2a1748;
-    box-shadow: 0 8px 35px rgba(91, 33, 182, 0.18);
+    box-shadow: 0 8px 35px rgba(124, 58, 237, 0.22);
 }
 
                     .card h2 {
@@ -136,7 +143,7 @@ router.get('/', (req, res) => {
             </head>
 
             <body>
-                <div class="navbar">
+                <div class="sidebar">
                     <div class="brand">⚙️ BTW Mechanic</div>
 
                     <a class="logout" href="/dashboard/logout">
@@ -211,7 +218,7 @@ router.get('/', (req, res) => {
                 }
 
                 .card {
-                    background: #1f2937;
+                    background: rgba(15, 15, 30, 0.75);
                     padding: 45px;
                     border-radius: 16px;
                     width: 90%;
