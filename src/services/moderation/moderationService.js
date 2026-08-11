@@ -177,6 +177,16 @@ export class ModerationService {
 
       await guild.members.ban(user.id, { reason });
 
+if (guild.id === process.env.BAN_MAIN_GUILD_ID) {
+    await trackBan(guild.client, {
+        userId: user.id,
+        username: user.tag,
+        reason,
+        moderatorId: moderator.id,
+        guildId: guild.id,
+    });
+}
+
       const caseId = await logModerationAction({
         client: guild.client,
         guild,
