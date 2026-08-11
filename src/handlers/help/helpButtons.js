@@ -16,25 +16,14 @@ import { logger } from '../../utils/logger.js';
 
 const BACK_BUTTON_ID = 'help-back-to-main';
 const PAGINATION_PREFIX = 'help-page';
-
 const BUG_REPORT_BUTTON_ID = 'help-bug-report';
-const BUG_REPLY_BUTTON_PREFIX = 'help-bug-reply';
 
 const BUG_REPORT_MODAL_ID = 'help-bug-report-modal';
-const BUG_REPLY_MODAL_PREFIX = 'help-bug-reply-modal';
-
 const BUG_TITLE_ID = 'help-bug-title';
 const BUG_DESCRIPTION_ID = 'help-bug-description';
 const BUG_STEPS_ID = 'help-bug-steps';
 const BUG_EXPECTED_ID = 'help-bug-expected';
 const BUG_EXTRA_ID = 'help-bug-extra';
-
-const BUG_REPLY_ID = 'help-bug-reply-text';
-
-
-/* ============================================================
-   BACK BUTTON
-============================================================ */
 
 export const helpBackButton = {
     name: BACK_BUTTON_ID,
@@ -52,22 +41,29 @@ export const helpBackButton = {
                 embeds,
                 components,
             });
-
         } catch (error) {
-            logger.error('Help back button error:', error);
+            if (error?.code === 40060 || error?.code === 10062) {
+                logger.warn(
+                    'Help back button interaction already acknowledged or expired.',
+                    {
+                        event: 'interaction.help.button.unavailable',
+                        errorCode: String(error.code),
+                        customId: interaction.customId,
+                        interactionId: interaction.id,
+                    }
+                );
+                return;
+            }
+
+            throw error;
         }
     },
 };
 
-
-/* ============================================================
-   REPORT BUG BUTTON
-============================================================ */
-
 export const helpBugReportButton = {
     name: BUG_REPORT_BUTTON_ID,
 
-    async execute(interaction, client) {
+    async execute(interaction) {
         try {
             const modal = new ModalBuilder()
                 .setCustomId(BUG_REPORT_MODAL_ID)
@@ -91,10 +87,8 @@ export const helpBugReportButton = {
 
             const stepsInput = new TextInputBuilder()
                 .setCustomId(BUG_STEPS_ID)
-                .setLabel('How can we fix it?')
-                .setPlaceholder(
-                    'Tell us how you think we can fix this...'
-                )
+                .setLabel('How can we reproduce it?')
+                .setPlaceholder('Tell us the steps needed to reproduce the bug...')
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(true)
                 .setMaxLength(1000);
@@ -102,9 +96,7 @@ export const helpBugReportButton = {
             const expectedInput = new TextInputBuilder()
                 .setCustomId(BUG_EXPECTED_ID)
                 .setLabel('What should have happened?')
-                .setPlaceholder(
-                    'Describe what you expected the bot to do...'
-                )
+                .setPlaceholder('Describe what you expected the bot to do...')
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(true)
                 .setMaxLength(1000);
@@ -112,9 +104,7 @@ export const helpBugReportButton = {
             const extraInput = new TextInputBuilder()
                 .setCustomId(BUG_EXTRA_ID)
                 .setLabel('Extra information')
-                .setPlaceholder(
-                    'Screenshots, error messages, or anything else...'
-                )
+                .setPlaceholder('Screenshots, error messages, or anything else...')
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(false)
                 .setMaxLength(1000);
@@ -128,229 +118,19 @@ export const helpBugReportButton = {
             );
 
             await interaction.showModal(modal);
-
         } catch (error) {
-            logger.error('Failed to open bug report modal:', error);
+            logger.error('Failed to open bug report form:', error);
 
-            try {
-                if (!interaction.replied && !interaction.deferred) {
-                    await interaction.reply({
-                        content:
-                            '❌ Something went wrong while opening the bug report form.',
-                        flags: MessageFlags.Ephemeral,
-                    });
-                }
-            } catch {}
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    content:
+                        '❌ Something went wrong while opening the bug report form.',
+                    flags: MessageFlags.Ephemeral,
+                }).catch(() => {});
+            }
         }
     },
 };
-
-
-/* ============================================================
-   REPLY TO SENDER BUTTON
-============================================================ */
-
-export const helpBugReplyButton = {
-    name: BUG_REPLY_BUTTON_PREFIX,
-
-    async execute(interaction, client) {
-        try {
-            const separatorIndex =
-                interaction.customId.indexOf(':');
-
-            if (separatorIndex === -1) {
-                throw new Error(
-                    'Reporter ID missing from bug reply button.'
-                );
-            }
-
-            const reporterId =
-                interaction.customId.substring(
-                    separatorIndex + 1
-                );
-
-            if (!/^\d+$/.test(reporterId)) {
-                throw new Error(
-                    'Invalid reporter ID.'
-                );
-            }
-
-            const modal = new ModalBuilder()
-                .setCustomId(
-                    `${BUG_REPLY_MODAL_PREFIX}:${reporterId}`
-                )
-                .setTitle('📨 Reply to Bug Reporter');
-
-            const replyInput = new TextInputBuilder()
-                .setCustomId(BUG_REPLY_ID)
-                .setLabel('Your response to the reporter')
-                .setPlaceholder(
-                    'Explain what you did to resolve or investigate the issue...'
-                )
-                .setStyle(TextInputStyle.Paragraph)
-                .setRequired(true)
-                .setMaxLength(2000);
-
-            modal.addComponents(
-                new ActionRowBuilder().addComponents(
-                    replyInput
-                )
-            );
-
-            /*
-             * THIS IS THE ONLY THING THIS BUTTON DOES.
-             *
-             * We do NOT awaitModalSubmit() here.
-             */
-            await interaction.showModal(modal);
-
-        } catch (error) {
-            logger.error(
-                'Failed to open bug reply modal:',
-                error
-            );
-
-            try {
-                if (
-                    !interaction.replied &&
-                    !interaction.deferred
-                ) {
-                    await interaction.reply({
-                        content:
-                            '❌ Something went wrong while opening the reply form.',
-                        flags: MessageFlags.Ephemeral,
-                    });
-                }
-            } catch {}
-        }
-    },
-};
-
-
-/* ============================================================
-   BUG REPLY MODAL
-============================================================ */
-
-export const helpBugReplyModal = {
-    name: BUG_REPLY_MODAL_PREFIX,
-
-    async execute(interaction, client) {
-        try {
-            const separatorIndex =
-                interaction.customId.indexOf(':');
-
-            if (separatorIndex === -1) {
-                throw new Error(
-                    'Reporter ID missing from reply modal.'
-                );
-            }
-
-            const reporterId =
-                interaction.customId.substring(
-                    separatorIndex + 1
-                );
-
-            const replyText =
-                interaction.fields.getTextInputValue(
-                    BUG_REPLY_ID
-                );
-
-            if (!replyText?.trim()) {
-                throw new Error(
-                    'Reply cannot be empty.'
-                );
-            }
-
-            logger.info(
-                `Sending bug reply to ${reporterId}`
-            );
-
-            const reporter =
-                await client.users.fetch(reporterId);
-
-            if (!reporter) {
-                throw new Error(
-                    'Could not find bug reporter.'
-                );
-            }
-
-            const responseEmbed = createEmbed({
-                title: '🐛 Bug Report Update',
-
-                description:
-                    'You have received an update regarding the bug you reported to BTW Mechanic.',
-
-                color: 'success',
-
-                fields: [
-                    {
-                        name: '📨 Response from the Bot Team',
-                        value: replyText,
-                        inline: false,
-                    },
-                ],
-            });
-
-            responseEmbed.setFooter({
-                text: 'BTW Mechanic Bug Reporting System',
-            });
-
-            responseEmbed.setTimestamp();
-
-            await reporter.send({
-                embeds: [responseEmbed],
-            });
-
-            await interaction.reply({
-                content:
-                    '✅ **Reply sent!**\n\n' +
-                    `Your response has been sent to <@${reporterId}>.`,
-
-                flags: MessageFlags.Ephemeral,
-            });
-
-            logger.info(
-                `Bug reply successfully sent to ${reporterId}`
-            );
-
-        } catch (error) {
-            logger.error(
-                'Failed to send bug reply:',
-                {
-                    message: error?.message,
-                    code: error?.code,
-                    stack: error?.stack,
-                }
-            );
-
-            let message =
-                '❌ **Something went wrong while sending the reply.**';
-
-            if (error?.code === 50007) {
-                message =
-                    '❌ **I could not DM this user.**\n\n' +
-                    'They may have DMs disabled or have blocked the bot.';
-            }
-
-            try {
-                if (
-                    !interaction.replied &&
-                    !interaction.deferred
-                ) {
-                    await interaction.reply({
-                        content: message,
-                        flags: MessageFlags.Ephemeral,
-                    });
-                }
-            } catch {}
-        }
-    },
-};
-
-
-/* ============================================================
-   PAGINATION
-============================================================ */
 
 function getPaginationInfo(components) {
     for (const row of components || []) {
@@ -381,16 +161,12 @@ function getPaginationInfo(components) {
     };
 }
 
-
 export const helpPaginationButton = {
     name: `${PAGINATION_PREFIX}_next`,
 
     async execute(interaction, client) {
         try {
-            if (
-                !interaction.deferred &&
-                !interaction.replied
-            ) {
+            if (!interaction.deferred && !interaction.replied) {
                 await interaction.deferUpdate();
             }
 
@@ -404,25 +180,22 @@ export const helpPaginationButton = {
             let nextPage = currentPage;
 
             switch (interaction.customId) {
-
                 case `${PAGINATION_PREFIX}_first`:
                     nextPage = 1;
                     break;
 
                 case `${PAGINATION_PREFIX}_prev`:
-                    nextPage =
-                        Math.max(
-                            1,
-                            currentPage - 1
-                        );
+                    nextPage = Math.max(
+                        1,
+                        currentPage - 1
+                    );
                     break;
 
                 case `${PAGINATION_PREFIX}_next`:
-                    nextPage =
-                        Math.min(
-                            totalPages,
-                            currentPage + 1
-                        );
+                    nextPage = Math.min(
+                        totalPages,
+                        currentPage + 1
+                    );
                     break;
 
                 case `${PAGINATION_PREFIX}_last`:
@@ -437,22 +210,35 @@ export const helpPaginationButton = {
             const {
                 embeds,
                 components,
-            } =
-                await createAllCommandsMenu(
-                    nextPage,
-                    client
-                );
+            } = await createAllCommandsMenu(
+                nextPage,
+                client
+            );
 
             await interaction.editReply({
                 embeds,
                 components,
             });
-
         } catch (error) {
-            logger.error(
-                'Help pagination error:',
-                error
-            );
+            if (
+                error?.code === 40060 ||
+                error?.code === 10062
+            ) {
+                logger.warn(
+                    'Help pagination interaction already acknowledged or expired.',
+                    {
+                        event:
+                            'interaction.help.pagination.unavailable',
+                        errorCode: String(error.code),
+                        customId: interaction.customId,
+                        interactionId: interaction.id,
+                    }
+                );
+
+                return;
+            }
+
+            throw error;
         }
     },
 };
