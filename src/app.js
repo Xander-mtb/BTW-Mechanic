@@ -33,8 +33,8 @@ import {
   EXPECTED_SCHEMA_LABEL
 } from './config/database/schemaVersion.js';
 
-class BTW MECH extends Client {
-  constructor() {
+class TitanBot extends Client {
+    constructor() {
     super({
       intents: [
         GatewayIntentBits.Guilds,
@@ -208,7 +208,7 @@ class BTW MECH extends Client {
 
     app.get('/', (req, res) => {
       res.status(200).json({
-        message: 'BTW MECH System Online',
+        message: 'Titanbot System Online',
         version: pkg.version,
         timestamp: new Date().toISOString()
       });
@@ -462,7 +462,7 @@ class BTW MECH extends Client {
 }
 
 try {
-  const bot = new BTW MECH();
+  const bot = new Titanbot();
 
   process.on(
     'SIGTERM',
@@ -549,4 +549,4 @@ try {
   process.exit(1);
 }
 
-export default BTW MECH;
+export default Titanbot;
