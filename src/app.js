@@ -3,6 +3,7 @@ import { refreshBanSync } from './services/moderation/banSyncService.js';
 import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import express from 'express';
+import dashboardRouter from './dashboard/dashboardServer.js';
 import cron from 'node-cron';
 import config from './config/application.js';
 import { initializeDatabase } from './utils/database.js';
@@ -135,6 +136,8 @@ class TitanBot extends Client {
   startWebServer() {
     const app = express();
 
+    app.use('/dashboard', dashboardRouter);
+    
     const configuredPort = Number(
       this.config.api?.port ||
       process.env.PORT ||
