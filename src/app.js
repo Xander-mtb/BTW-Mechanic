@@ -136,12 +136,16 @@ class BtwBot extends Client {
   startWebServer() {
     const app = express();
 
+    app.get('/', (req, res) => {
+        res.redirect('/dashboard');
+    });
+
     app.use('/dashboard', dashboardRouter);
 
     const configuredPort = Number(
-      this.config.api?.port ||
-      process.env.PORT ||
-      3000
+        this.config.api?.port ||
+        process.env.PORT ||
+        3000
     );
 
     const host = process.env.WEB_HOST || '0.0.0.0';
