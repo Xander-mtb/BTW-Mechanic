@@ -139,13 +139,34 @@ router.get('/', (req, res) => {
                         padding: 25px;
                         border-radius: 12px;
                     }
+                        .account-menu {
+                         display: none;
+                  }
                 </style>
             </head>
 
             <body>
                 <div class="sidebar">
                     <div class="brand">⚙️ BTW Mechanic</div>
+<div class="account" onclick="toggleAccountMenu()">
+                        <h2>${escapeHtml(req.session.user.username)}</h2>
 
+                        <p>
+                            Logged in as
+                            <strong>${escapeHtml(req.session.user.username)}</strong>
+                        </p>
+
+                        <div class="account-menu" id="accountMenu">
+    <p>
+        Discord ID:
+        <strong>${escapeHtml(req.session.user.id)}</strong>
+    </p>
+
+    <a href="/dashboard">⚙️ Settings</a>
+
+    <a href="/dashboard/logout">🚪 Log out</a>
+</div>
+                    </div>
                     <a class="logout" href="/dashboard/logout">
                         Logout
                     </a>
@@ -181,20 +202,15 @@ router.get('/', (req, res) => {
                         </div>
                     </div>
 
-                    <div class="account">
-                        <h2>👤 Your Account</h2>
-
-                        <p>
-                            Logged in as
-                            <strong>${escapeHtml(req.session.user.username)}</strong>
-                        </p>
-
-                        <p>
-                            Discord ID:
-                            <strong>${escapeHtml(req.session.user.id)}</strong>
-                        </p>
-                    </div>
+                    
                 </div>
+                
+                <script>
+    function toggleAccountMenu() {
+        const menu = document.getElementById('accountMenu');
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
             </body>
             </html>
         `);
