@@ -4,6 +4,8 @@ import { PermissionFlagsBits } from 'discord.js';
 import { logger } from '../../utils/logger.js';
 import { TitanBotError, ErrorTypes } from '../../utils/errorHandler.js';
 import { logModerationAction } from '../../utils/moderation.js';
+import { trackBan, removeTrackedBan } from './banSyncService.js';
+await guild.members.ban(user.id, { reason });
 
 function getTargetLabel(target) {
   return target.user?.tag ?? target.displayName ?? 'this user';
