@@ -31,64 +31,146 @@ function getDiscordOAuthUrl() {
 }
 
 router.get('/', (req, res) => {
-    if (req.session.user) {
+    const bot = req.app.locals.bot;
+    
+            if (req.session.user) {
         return res.send(`
             <!DOCTYPE html>
             <html>
             <head>
                 <title>BTW Mechanic Dashboard</title>
                 <style>
+                    * {
+                        box-sizing: border-box;
+                    }
+
                     body {
                         margin: 0;
                         font-family: Arial, sans-serif;
                         background: #111827;
                         color: white;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
                         min-height: 100vh;
+                    }
+
+                    .navbar {
+                        background: #1f2937;
+                        padding: 18px 30px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+
+                    .brand {
+                        font-size: 22px;
+                        font-weight: bold;
+                    }
+
+                    .logout {
+                        background: #5865F2;
+                        color: white;
+                        text-decoration: none;
+                        padding: 10px 18px;
+                        border-radius: 8px;
+                    }
+
+                    .container {
+                        max-width: 1100px;
+                        margin: 40px auto;
+                        padding: 0 20px;
+                    }
+
+                    .subtitle {
+                        color: #9ca3af;
+                        margin-bottom: 30px;
+                    }
+
+                    .grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                        gap: 20px;
                     }
 
                     .card {
                         background: #1f2937;
-                        padding: 40px;
-                        border-radius: 16px;
-                        width: 90%;
-                        max-width: 600px;
-                        text-align: center;
+                        padding: 25px;
+                        border-radius: 12px;
                     }
 
-                    a {
-                        color: white;
-                        text-decoration: none;
+                    .card h2 {
+                        margin-top: 0;
                     }
 
-                    .button {
-                        display: inline-block;
+                    .value {
+                        font-size: 24px;
+                        font-weight: bold;
+                        margin-top: 15px;
+                    }
+
+                    .online {
+                        color: #22c55e;
+                    }
+
+                    .account {
                         margin-top: 20px;
-                        padding: 12px 24px;
-                        background: #5865F2;
-                        border-radius: 8px;
+                        background: #1f2937;
+                        padding: 25px;
+                        border-radius: 12px;
                     }
                 </style>
             </head>
 
             <body>
-                <div class="card">
-                    <h1>⚙️ BTW Mechanic</h1>
+                <div class="navbar">
+                    <div class="brand">⚙️ BTW Mechanic</div>
 
-                    <p>
-                        Welcome back,
-                        <strong>${escapeHtml(req.session.user.username)}</strong>!
-                    </p>
-
-                    <p>
-                        You are successfully logged into the dashboard.
-                    </p>
-
-                    <a class="button" href="/dashboard/logout">
+                    <a class="logout" href="/dashboard/logout">
                         Logout
                     </a>
+                </div>
+
+                <div class="container">
+                    <h1>Dashboard</h1>
+
+                    <p class="subtitle">
+                        Manage your BTW Mechanic Discord bot.
+                    </p>
+
+                    <div class="grid">
+                        <div class="card">
+                            <h2>🤖 Bot Status</h2>
+                            <div class="value online">
+                                ${bot?.isReady() ? '🟢 Online' : '🔴 Offline'}
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2>⚙️ Bot</h2>
+                            <div class="value">
+                                BTWBot
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2>🔐 Authentication</h2>
+                            <div class="value">
+                                ✅ Connected
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="account">
+                        <h2>👤 Your Account</h2>
+
+                        <p>
+                            Logged in as
+                            <strong>${escapeHtml(req.session.user.username)}</strong>
+                        </p>
+
+                        <p>
+                            Discord ID:
+                            <strong>${escapeHtml(req.session.user.id)}</strong>
+                        </p>
+                    </div>
                 </div>
             </body>
             </html>

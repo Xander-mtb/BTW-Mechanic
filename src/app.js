@@ -137,6 +137,7 @@ class BtwBot extends Client {
     const app = express();
 
     app.set('trust proxy', 1);
+    app.locals.bot = this;
     
     app.get('/', (req, res) => {
         res.redirect('/dashboard');
