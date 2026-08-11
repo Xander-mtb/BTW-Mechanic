@@ -1,4 +1,11 @@
-import { SlashCommandBuilder, PermissionFlagsBits, PermissionsBitField, ChannelType, MessageFlags } from 'discord.js';
+import {
+    SlashCommandBuilder,
+    PermissionFlagsBits,
+    PermissionsBitField,
+    ChannelType,
+    MessageFlags,
+    EmbedBuilder,
+} from 'discord.js';
 import { createEmbed, errorEmbed, successEmbed, infoEmbed, warningEmbed } from '../../utils/embeds.js';
 import { logModerationAction } from '../../utils/moderation.js';
 import { logger } from '../../utils/logger.js';
@@ -95,14 +102,46 @@ export default {
                 }
             }
         });
+      // Send warning DM to the user
+try {
+    const warningEmbed = new EmbedBuilder()
+        .setTitle('⚠️ Warning Received')
+        .setDescription(
+            `You have received a warning in **${interaction.guild.name}**.`
+        )
+        .addFields(
+            {
+                name: 'Reason',
+                value: reason,
+                inline: false,
+            },
+            {
+                name: 'Warning',
+                value: `${totalCount}/3`,
+                inline: true,
+            },
+            {
+                name: 'Moderator',
+                value: `<@${moderator.id}>`,
+                inline: true,
+            },
+            {
+                name: 'Moderator Note',
+                value: reason,
+                inline: false,
+            }
+        )
+        .setFooter({
+            text: 'Please make sure you follow the server rules. Further violations may result in additional moderation action.',
+        })
+        .setTimestamp();
 
-        await InteractionHelper.safeEditReply(interaction, {
-            embeds: [
-                successEmbed(
-                    `⚠️ **Warned** ${target.tag}`,
-                    `**Reason:** ${reason}\n**Total Warns:** ${totalCount}`,
-                ),
-            ],
-        });
-    }
-};
+    await target.send({
+        embeds: [warningEmbed],
+    });
+} catch (error) {
+    logger.warn(
+        `Could not DM warned user ${target.tag} (${target.id})`,
+        error
+    );
+}
