@@ -16,14 +16,20 @@ import { logger } from '../../utils/logger.js';
 
 const BACK_BUTTON_ID = "help-back-to-main";
 const PAGINATION_PREFIX = "help-page";
+
 const BUG_REPORT_BUTTON_ID = "help-bug-report";
+const BUG_REPLY_BUTTON_ID = "help-bug-reply";
 
 const BUG_REPORT_MODAL_ID = "help-bug-report-modal";
+const BUG_REPLY_MODAL_ID = "help-bug-reply-modal";
+
 const BUG_TITLE_ID = "help-bug-title";
 const BUG_DESCRIPTION_ID = "help-bug-description";
 const BUG_STEPS_ID = "help-bug-steps";
 const BUG_EXPECTED_ID = "help-bug-expected";
 const BUG_EXTRA_ID = "help-bug-extra";
+
+const BUG_REPLY_ID = "help-bug-reply-text";
 
 export const helpBackButton = {
     name: BACK_BUTTON_ID,
@@ -88,7 +94,7 @@ export const helpBugReportButton = {
             const stepsInput = new TextInputBuilder()
                 .setCustomId(BUG_STEPS_ID)
                 .setLabel('How can we fix it?')
-                .setPlaceholder('Tell us how you think we can fix this?...')
+                .setPlaceholder('Tell us how you think we can fix this...')
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(true)
                 .setMaxLength(1000);
@@ -104,7 +110,9 @@ export const helpBugReportButton = {
             const extraInput = new TextInputBuilder()
                 .setCustomId(BUG_EXTRA_ID)
                 .setLabel('Extra information')
-                .setPlaceholder('Screenshots, error messages, or anything else...')
+                .setPlaceholder(
+                    'Screenshots, error messages, or anything else...'
+                )
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(false)
                 .setMaxLength(1000);
@@ -143,7 +151,6 @@ export const helpBugReportButton = {
                 submitted.fields.getTextInputValue(BUG_EXTRA_ID) ||
                 'None provided';
 
-            // Get the bot/application owner.
             await client.application.fetch();
 
             const owner = client.application.owner;
@@ -158,6 +165,7 @@ export const helpBugReportButton = {
                 title: '🐛 New Bug Report',
                 description:
                     'A new bug report has been submitted through the Help Menu.',
+
                 color: 'error',
 
                 fields: [
@@ -187,7 +195,7 @@ export const helpBugReportButton = {
                         inline: false,
                     },
                     {
-                        name: '🔁 Steps to Reproduce',
+                        name: '🔁 How Can We Fix It?',
                         value: bugSteps,
                         inline: false,
                     },
@@ -210,8 +218,18 @@ export const helpBugReportButton = {
 
             bugEmbed.setTimestamp();
 
+            const replyButton = new ButtonBuilder()
+                .setCustomId(BUG_REPLY_BUTTON_ID)
+                .setLabel('Reply to Sender')
+                .setStyle(ButtonStyle.Primary);
+
+            const replyRow = new ActionRowBuilder().addComponents(
+                replyButton
+            );
+
             await owner.send({
                 embeds: [bugEmbed],
+                components: [replyRow],
             });
 
             await submitted.reply({
@@ -225,8 +243,10 @@ export const helpBugReportButton = {
             if (
                 error?.code === 40060 ||
                 error?.code === 10062 ||
-                error?.name === 'Error' &&
-                error?.message?.includes('time')
+                (
+                    error?.name === 'Error' &&
+                    error?.message?.includes('time')
+                )
             ) {
                 logger.warn(
                     'Bug report interaction expired or was already acknowledged.',
@@ -257,6 +277,161 @@ export const helpBugReportButton = {
             } catch (replyError) {
                 logger.error(
                     'Failed to send bug report error response:',
+                    replyError
+                );
+            }
+        }
+    },
+};
+
+export const helpBugReplyButton = {
+    name: BUG_REPLY_BUTTON_ID,
+
+    async execute(interaction, client) {
+        try {
+            /*
+             * The reporter's ID is stored in the "Reported By" field
+             * of the bug report embed.
+             */
+            const embed = interaction.message?.embeds?.[0];
+
+            const reportedByField = embed?.fields?.find(
+                (field) => field.name === '👤 Reported By'
+            );
+
+            if (!reportedByField?.value) {
+                throw new Error(
+                    'Could not find the reporter information in the bug report.'
+                );
+            }
+
+            const userIdMatch =
+                reportedByField.value.match(
+                    /User ID:\s*`(\d+)`/
+                );
+
+            if (!userIdMatch) {
+                throw new Error(
+                    'Could not extract the reporter ID from the bug report.'
+                );
+            }
+
+            const reporterId = userIdMatch[1];
+
+            const modal = new ModalBuilder()
+                .setCustomId(BUG_REPLY_MODAL_ID)
+                .setTitle('📨 Reply to Bug Reporter');
+
+            const replyInput = new TextInputBuilder()
+                .setCustomId(BUG_REPLY_ID)
+                .setLabel('Your response to the reporter')
+                .setPlaceholder(
+                    'Explain what you did to resolve or investigate the issue...'
+                )
+                .setStyle(TextInputStyle.Paragraph)
+                .setRequired(true)
+                .setMaxLength(2000);
+
+            modal.addComponents(
+                new ActionRowBuilder().addComponents(replyInput)
+            );
+
+            await interaction.showModal(modal);
+
+            const submitted = await interaction.awaitModalSubmit({
+                time: 10 * 60 * 1000,
+
+                filter: (modalInteraction) =>
+                    modalInteraction.customId === BUG_REPLY_MODAL_ID &&
+                    modalInteraction.user.id === interaction.user.id,
+            });
+
+            const replyText =
+                submitted.fields.getTextInputValue(BUG_REPLY_ID);
+
+            const reporter =
+                await client.users.fetch(reporterId);
+
+            if (!reporter) {
+                throw new Error(
+                    'Could not find the original bug reporter.'
+                );
+            }
+
+            const responseEmbed = createEmbed({
+                title: '🐛 Bug Report Update',
+                description:
+                    'You have received an update regarding the bug you reported to BTW Mechanic.',
+
+                color: 'success',
+
+                fields: [
+                    {
+                        name: '📨 Response from the Bot Team',
+                        value: replyText,
+                        inline: false,
+                    },
+                ],
+            });
+
+            responseEmbed.setFooter({
+                text: 'BTW Mechanic Bug Reporting System',
+            });
+
+            responseEmbed.setTimestamp();
+
+            await reporter.send({
+                embeds: [responseEmbed],
+            });
+
+            await submitted.reply({
+                content:
+                    '✅ **Reply sent!**\n\n' +
+                    `Your response has been sent to <@${reporterId}>.`,
+                flags: MessageFlags.Ephemeral,
+            });
+
+            logger.info(
+                `Bug report reply sent to user ${reporterId}`
+            );
+        } catch (error) {
+            if (
+                error?.code === 40060 ||
+                error?.code === 10062 ||
+                (
+                    error?.name === 'Error' &&
+                    error?.message?.includes('time')
+                )
+            ) {
+                logger.warn(
+                    'Bug reply interaction expired or was already acknowledged.',
+                    {
+                        event: 'interaction.help.bug_reply.unavailable',
+                        errorCode: String(error?.code),
+                        customId: interaction.customId,
+                        interactionId: interaction.id,
+                    }
+                );
+
+                return;
+            }
+
+            logger.error(
+                'Failed to send bug report reply:',
+                error
+            );
+
+            try {
+                if (!interaction.replied && !interaction.deferred) {
+                    await interaction.reply({
+                        content:
+                            '❌ Something went wrong while sending the reply.',
+                        flags: MessageFlags.Ephemeral,
+                    });
+                }
+            } catch (replyError) {
+                logger.error(
+                    'Failed to send bug reply error response:',
                     replyError
                 );
             }
