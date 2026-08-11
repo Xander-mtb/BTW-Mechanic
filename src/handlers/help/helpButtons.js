@@ -1,4 +1,3 @@
-import { createEmbed } from '../../utils/embeds.js';
 import { createAllCommandsMenu } from './helpSelectMenus.js';
 import { createInitialHelpMenu } from '../../commands/Core/help.js';
 
@@ -16,14 +15,25 @@ import { logger } from '../../utils/logger.js';
 
 const BACK_BUTTON_ID = 'help-back-to-main';
 const PAGINATION_PREFIX = 'help-page';
-const BUG_REPORT_BUTTON_ID = 'help-bug-report';
 
+const BUG_REPORT_BUTTON_ID = 'help-bug-report';
 const BUG_REPORT_MODAL_ID = 'help-bug-report-modal';
+
+const BUG_REPLY_BUTTON_PREFIX = 'help-bug-reply';
+const BUG_REPLY_MODAL_PREFIX = 'help-bug-reply-modal';
+
 const BUG_TITLE_ID = 'help-bug-title';
 const BUG_DESCRIPTION_ID = 'help-bug-description';
 const BUG_STEPS_ID = 'help-bug-steps';
 const BUG_EXPECTED_ID = 'help-bug-expected';
 const BUG_EXTRA_ID = 'help-bug-extra';
+
+const BUG_REPLY_ID = 'help-bug-reply-text';
+
+
+// ===============================
+// BACK TO HELP MENU
+// ===============================
 
 export const helpBackButton = {
     name: BACK_BUTTON_ID,
@@ -41,6 +51,7 @@ export const helpBackButton = {
                 embeds,
                 components,
             });
+
         } catch (error) {
             if (error?.code === 40060 || error?.code === 10062) {
                 logger.warn(
@@ -52,6 +63,7 @@ export const helpBackButton = {
                         interactionId: interaction.id,
                     }
                 );
+
                 return;
             }
 
@@ -59,6 +71,11 @@ export const helpBackButton = {
         }
     },
 };
+
+
+// ===============================
+// REPORT BUG BUTTON
+// ===============================
 
 export const helpBugReportButton = {
     name: BUG_REPORT_BUTTON_ID,
@@ -88,7 +105,9 @@ export const helpBugReportButton = {
             const stepsInput = new TextInputBuilder()
                 .setCustomId(BUG_STEPS_ID)
                 .setLabel('How can we reproduce it?')
-                .setPlaceholder('Tell us the steps needed to reproduce the bug...')
+                .setPlaceholder(
+                    'Tell us the steps needed to reproduce the bug...'
+                )
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(true)
                 .setMaxLength(1000);
@@ -96,7 +115,9 @@ export const helpBugReportButton = {
             const expectedInput = new TextInputBuilder()
                 .setCustomId(BUG_EXPECTED_ID)
                 .setLabel('What should have happened?')
-                .setPlaceholder('Describe what you expected the bot to do...')
+                .setPlaceholder(
+                    'Describe what you expected the bot to do...'
+                )
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(true)
                 .setMaxLength(1000);
@@ -104,7 +125,9 @@ export const helpBugReportButton = {
             const extraInput = new TextInputBuilder()
                 .setCustomId(BUG_EXTRA_ID)
                 .setLabel('Extra information')
-                .setPlaceholder('Screenshots, error messages, or anything else...')
+                .setPlaceholder(
+                    'Screenshots, error messages, or anything else...'
+                )
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(false)
                 .setMaxLength(1000);
@@ -118,8 +141,12 @@ export const helpBugReportButton = {
             );
 
             await interaction.showModal(modal);
+
         } catch (error) {
-            logger.error('Failed to open bug report form:', error);
+            logger.error(
+                'Failed to open bug report form:',
+                error
+            );
 
             if (!interaction.replied && !interaction.deferred) {
                 await interaction.reply({
@@ -131,6 +158,75 @@ export const helpBugReportButton = {
         }
     },
 };
+
+
+// ===============================
+// REPLY TO SENDER BUTTON
+// ===============================
+
+export const helpBugReplyButton = {
+    name: BUG_REPLY_BUTTON_PREFIX,
+
+    async execute(interaction) {
+        try {
+            /*
+             * The button custom ID is:
+             *
+             * help-bug-reply:USER_ID
+             */
+
+            const parts = interaction.customId.split(':');
+            const reporterId = parts[1];
+
+            if (!reporterId) {
+                throw new Error(
+                    'Could not determine the bug reporter ID.'
+                );
+            }
+
+            const modal = new ModalBuilder()
+                .setCustomId(
+                    `${BUG_REPLY_MODAL_PREFIX}:${reporterId}`
+                )
+                .setTitle('Reply to Bug Reporter');
+
+            const replyInput = new TextInputBuilder()
+                .setCustomId(BUG_REPLY_ID)
+                .setLabel('Your response')
+                .setPlaceholder(
+                    'Tell the reporter what you have done to resolve the issue...'
+                )
+                .setStyle(TextInputStyle.Paragraph)
+                .setRequired(true)
+                .setMaxLength(2000);
+
+            modal.addComponents(
+                new ActionRowBuilder().addComponents(replyInput)
+            );
+
+            await interaction.showModal(modal);
+
+        } catch (error) {
+            logger.error(
+                'Failed to open bug reply form:',
+                error
+            );
+
+            if (!interaction.replied && !interaction.deferred) {
+                await interaction.reply({
+                    content:
+                        '❌ Something went wrong while opening the reply form.',
+                    flags: MessageFlags.Ephemeral,
+                }).catch(() => {});
+            }
+        }
+    },
+};
+
+
+// ===============================
+// PAGINATION
+// ===============================
 
 function getPaginationInfo(components) {
     for (const row of components || []) {
@@ -161,6 +257,7 @@ function getPaginationInfo(components) {
     };
 }
 
+
 export const helpPaginationButton = {
     name: `${PAGINATION_PREFIX}_next`,
 
@@ -180,6 +277,7 @@ export const helpPaginationButton = {
             let nextPage = currentPage;
 
             switch (interaction.customId) {
+
                 case `${PAGINATION_PREFIX}_first`:
                     nextPage = 1;
                     break;
@@ -219,7 +317,9 @@ export const helpPaginationButton = {
                 embeds,
                 components,
             });
+
         } catch (error) {
+
             if (
                 error?.code === 40060 ||
                 error?.code === 10062
