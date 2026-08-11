@@ -1,57 +1,68 @@
 import {
     SlashCommandBuilder,
     PermissionFlagsBits,
-    PermissionsBitField,
-    ChannelType,
-    MessageFlags,
     EmbedBuilder,
 } from 'discord.js';
-import { createEmbed, errorEmbed, successEmbed, infoEmbed, warningEmbed } from '../../utils/embeds.js';
+
 import { logModerationAction } from '../../utils/moderation.js';
 import { logger } from '../../utils/logger.js';
 import { WarningService } from '../../services/moderation/warningService.js';
 import { ModerationService } from '../../services/moderation/moderationService.js';
 import { TitanBotError, ErrorTypes } from '../../utils/errorHandler.js';
 import { InteractionHelper } from '../../utils/interactionHelper.js';
+
 export default {
     data: new SlashCommandBuilder()
-        .setName("warn")
-        .setDescription("Warn a user")
+        .setName('warn')
+        .setDescription('Warn a user')
+
         .addUserOption((o) =>
             o
-                .setName("target")
+                .setName('target')
                 .setRequired(true)
-                .setDescription("User to warn"),
+                .setDescription('User to warn')
         )
+
         .addStringOption((o) =>
             o
-                .setName("reason")
+                .setName('reason')
                 .setRequired(true)
-                .setDescription("Reason for the warning"),
+                .setDescription('Reason for the warning')
         )
-        .addStringOption(option =>
-    option
-        .setName('note')
-        .setDescription('Additional moderator note')
-        .setRequired(false)
-)
-        .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
-    category: "moderation",
+
+        .addStringOption((o) =>
+            o
+                .setName('note')
+                .setRequired(false)
+                .setDescription('Additional moderator note')
+        )
+
+        .setDefaultMemberPermissions(
+            PermissionFlagsBits.ModerateMembers
+        ),
+
+    category: 'moderation',
 
     async execute(interaction, config, client) {
-        const deferSuccess = await InteractionHelper.safeDefer(interaction);
+        const deferSuccess =
+            await InteractionHelper.safeDefer(interaction);
+
         if (!deferSuccess) {
             logger.warn(`Warn interaction defer failed`, {
                 userId: interaction.user.id,
                 guildId: interaction.guildId,
-                commandName: 'warn'
+                commandName: 'warn',
             });
             return;
         }
 
-        const target = interaction.options.getUser("target");
-        const member = interaction.options.getMember("target");
-        const reason = interaction.options.getString("reason");
+        const target = interaction.options.getUser('target');
+        const member = interaction.options.getMember('target');
+        const reason = interaction.options.getString('reason');
+        const note =
+            interaction.options.getString('note') ||
+            'No moderator note provided';
+
         const moderator = interaction.user;
         const guildId = interaction.guildId;
 
@@ -60,7 +71,7 @@ export default {
                 'Missing target user',
                 ErrorTypes.USER_INPUT,
                 'You must specify a user to warn.',
-                { subtype: 'invalid_user' },
+                { subtype: 'invalid_user' }
             );
         }
 
@@ -69,33 +80,38 @@ export default {
                 'Missing warning reason',
                 ErrorTypes.VALIDATION,
                 'You must provide a reason for the warning.',
-                { subtype: 'missing_required' },
+                { subtype: 'missing_required' }
             );
         }
 
         if (!member) {
             throw new TitanBotError(
-                "Target not found",
+                'Target not found',
                 ErrorTypes.USER_INPUT,
-                "The target user is not currently in this server."
+                'The target user is not currently in this server.'
             );
         }
 
-        ModerationService.assertModerationHierarchy(interaction.member, member, 'warn');
+        ModerationService.assertModerationHierarchy(
+            interaction.member,
+            member,
+            'warn'
+        );
 
-        const { id, totalCount } = await WarningService.addWarning({
-            guildId,
-            userId: target.id,
-            moderatorId: moderator.id,
-            reason,
-            timestamp: Date.now()
-        });
+        const { id, totalCount } =
+            await WarningService.addWarning({
+                guildId,
+                userId: target.id,
+                moderatorId: moderator.id,
+                reason,
+                timestamp: Date.now(),
+            });
 
         await logModerationAction({
             client,
             guild: interaction.guild,
             event: {
-                action: "User Warned",
+                action: 'User Warned',
                 target: `${target.tag} (${target.id})`,
                 executor: `${moderator.tag} (${moderator.id})`,
                 reason,
@@ -104,50 +120,61 @@ export default {
                     moderatorId: moderator.id,
                     totalWarns: totalCount,
                     warningNumber: totalCount,
-                    warningId: id
-                }
-            }
+                    warningId: id,
+                    moderatorNote: note,
+                },
+            },
         });
-      // Send warning DM to the user
-try {
-    const warningEmbed = new EmbedBuilder()
-        .setTitle('⚠️ Warning Received')
-        .setDescription(
-            `You have received a warning in **${interaction.guild.name}**.`
-        )
-        .addFields(
-            {
-                name: 'Reason',
-                value: reason,
-                inline: false,
-            },
-            {
-                name: 'Warning',
-                value: `${totalCount}/3`,
-                inline: true,
-            },
-            {
-                name: 'Moderator',
-                value: `<@${moderator.id}>`,
-                inline: true,
-            },
-            {
-                name: 'Moderator Note',
-                value: reason,
-                inline: false,
-            }
-        )
-        .setFooter({
-            text: 'Please make sure you follow the server rules. Further violations may result in additional moderation action.',
-        })
-        .setTimestamp();
 
-    await target.send({
-        embeds: [warningEmbed],
-    });
-} catch (error) {
-    logger.warn(
-        `Could not DM warned user ${target.tag} (${target.id})`,
-        error
-    );
-}
+        // Send warning DM
+        try {
+            const warningEmbed = new EmbedBuilder()
+                .setTitle('⚠️ You have received a warning')
+                .setDescription(
+                    `You have received a warning in **${interaction.guild.name}**.`
+                )
+                .addFields(
+                    {
+                        name: 'Reason',
+                        value: reason,
+                        inline: false,
+                    },
+                    {
+                        name: 'Warning',
+                        value: `${totalCount}/3`,
+                        inline: true,
+                    },
+                    {
+                        name: 'Moderator',
+                        value: `<@${moderator.id}>`,
+                        inline: true,
+                    },
+                    {
+                        name: 'Moderator Note',
+                        value: note,
+                        inline: false,
+                    }
+                )
+                .setFooter({
+                    text: 'Please make sure you follow the server rules. Further violations may result in additional moderation action.',
+                })
+                .setTimestamp();
+
+            await target.send({
+                embeds: [warningEmbed],
+            });
+        } catch (error) {
+            logger.warn(
+                `Could not DM warned user ${target.tag} (${target.id})`,
+                error
+            );
+        }
+
+        await InteractionHelper.safeEditReply(interaction, {
+            content:
+                `⚠️ **${target.tag}** has been warned.\n` +
+                `**Warning:** ${totalCount}/3\n` +
+                `**Reason:** ${reason}`,
+        });
+    },
+};
