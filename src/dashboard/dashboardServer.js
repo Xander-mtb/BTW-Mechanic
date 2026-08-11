@@ -47,12 +47,13 @@ router.get('/', (req, res) => {
             body {
                 margin: 0;
                 font-family: Arial, sans-serif;
-                background: #07070d;
+               background: radial-gradient(circle at top right, #24104f 0%, #090910 45%, #050509 100%);
                 color: white;
                 min-height: 100vh;
             }
                     .navbar {
-    background: #0b0b12;
+    background: rgba(10, 10, 18, 0.85);
+    border-bottom: 1px solid #2a1748;
     padding: 18px 30px;
     display: flex;
     justify-content: space-between;
@@ -101,10 +102,10 @@ router.get('/', (req, res) => {
 
                     .card {
     background: #0f111a;
-    padding: 28px;
+    padding: 30px;
     border-radius: 16px;
-    border: 1px solid #242038;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    border: 1px solid #2a1748;
+    box-shadow: 0 8px 35px rgba(91, 33, 182, 0.18);
 }
 
                     .card h2 {
