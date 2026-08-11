@@ -33,7 +33,7 @@ import {
   EXPECTED_SCHEMA_LABEL
 } from './config/database/schemaVersion.js';
 
-class TitanBot extends Client {
+class BTW MECH extends Client {
   constructor() {
     super({
       intents: [
@@ -137,7 +137,7 @@ class TitanBot extends Client {
     const app = express();
 
     app.use('/dashboard', dashboardRouter);
-    
+
     const configuredPort = Number(
       this.config.api?.port ||
       process.env.PORT ||
@@ -208,7 +208,7 @@ class TitanBot extends Client {
 
     app.get('/', (req, res) => {
       res.status(200).json({
-        message: 'TitanBot System Online',
+        message: 'BTW MECH System Online',
         version: pkg.version,
         timestamp: new Date().toISOString()
       });
@@ -462,7 +462,7 @@ class TitanBot extends Client {
 }
 
 try {
-  const bot = new TitanBot();
+  const bot = new BTW MECH();
 
   process.on(
     'SIGTERM',
@@ -549,4 +549,4 @@ try {
   process.exit(1);
 }
 
-export default TitanBot;
+export default BTW MECH;
