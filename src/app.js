@@ -208,7 +208,7 @@ class TitanBot extends Client {
 
     app.get('/', (req, res) => {
       res.status(200).json({
-        message: 'Titanbot System Online',
+        message: 'TitanBot System Online',
         version: pkg.version,
         timestamp: new Date().toISOString()
       });
@@ -549,4 +549,4 @@ try {
   process.exit(1);
 }
 
-export default Titanbot;
+export default TitanBot;
