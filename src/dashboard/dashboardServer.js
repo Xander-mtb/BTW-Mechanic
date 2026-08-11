@@ -39,77 +39,92 @@ router.get('/', (req, res) => {
             <html>
             <head>
                 <title>BTW Mechanic Dashboard</title>
-                <style>
-                    * {
-                        box-sizing: border-box;
-                    }
+                        <style>
+            * {
+                box-sizing: border-box;
+            }
 
-                    body {
-                        margin: 0;
-                        font-family: Arial, sans-serif;
-                        background: #111827;
-                        color: white;
-                        min-height: 100vh;
-                    }
-
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+                background: #07070d;
+                color: white;
+                min-height: 100vh;
+            }
                     .navbar {
-                        background: #1f2937;
-                        padding: 18px 30px;
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                    }
+    background: #0b0b12;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #242438;
+}
 
                     .brand {
-                        font-size: 22px;
-                        font-weight: bold;
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
                     }
 
                     .logout {
-                        background: #5865F2;
-                        color: white;
-                        text-decoration: none;
-                        padding: 10px 18px;
-                        border-radius: 8px;
-                    }
+    background: #6d28d9;
+    color: white;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.logout:hover {
+    background: #7c3aed;
+}
 
                     .container {
-                        max-width: 1100px;
-                        margin: 40px auto;
-                        padding: 0 20px;
-                    }
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 24px;
+}
 
                     .subtitle {
-                        color: #9ca3af;
-                        margin-bottom: 30px;
-                    }
+    color: #a1a1aa;
+    margin-bottom: 30px;
+    font-size: 15px;
+}
 
                     .grid {
-                        display: grid;
-                        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-                        gap: 20px;
-                    }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+}
 
                     .card {
-                        background: #1f2937;
-                        padding: 25px;
-                        border-radius: 12px;
-                    }
+    background: #0f111a;
+    padding: 28px;
+    border-radius: 16px;
+    border: 1px solid #242038;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
 
                     .card h2 {
-                        margin-top: 0;
-                    }
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #f4f4f5;
+}
 
                     .value {
-                        font-size: 24px;
-                        font-weight: bold;
-                        margin-top: 15px;
-                    }
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #ffffff;
+}
 
                     .online {
-                        color: #22c55e;
-                    }
-
+    color: #22c55e;
+    text-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+}
                     .account {
                         margin-top: 20px;
                         background: #1f2937;
