@@ -29,6 +29,12 @@ export default {
                 .setRequired(true)
                 .setDescription("Reason for the warning"),
         )
+        .addStringOption(option =>
+    option
+        .setName('note')
+        .setDescription('Additional moderator note')
+        .setRequired(false)
+)
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
     category: "moderation",
 
