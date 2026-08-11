@@ -87,8 +87,8 @@ export const helpBugReportButton = {
 
             const stepsInput = new TextInputBuilder()
                 .setCustomId(BUG_STEPS_ID)
-                .setLabel('How can we reproduce it?')
-                .setPlaceholder('Tell us the steps needed to reproduce the bug...')
+                .setLabel('How can we fix it?')
+                .setPlaceholder('Tell us how you think we can fix this?...')
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(true)
                 .setMaxLength(1000);
