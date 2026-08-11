@@ -50,21 +50,24 @@ router.get('/', (req, res) => {
                background: radial-gradient(circle at top right, #24104f 0%, #090910 45%, #050509 100%);
                 color: white;
                 min-height: 100vh;
+                overflow-x: hidden;
+                overflow-y: auto;
             }
                     .sidebar {
-    background: rgba(10, 10, 18, 0.85);
-    border-bottom: 1px solid #2a1748;
+    background: rgba(10, 10, 18, 0.92);
+    border-right: 1px solid #242438;
     padding: 24px 18px;
     width: 240px;
-    min-height: 100vh;
+    height: 100vh;
+
     position: fixed;
     left: 0;
     top: 0;
 
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    border-right: 1px solid #242438;
+
+    overflow: hidden;
 }
 
                     .brand {
@@ -90,9 +93,12 @@ router.get('/', (req, res) => {
 }
 
                     .container {
+    width: calc(100% - 240px);
     max-width: 1200px;
-    margin: 50px 40px 50px 280px;
-    padding: 20px;
+    margin-left: 240px;
+    padding: 50px 40px;
+}
+
 }
 
                     .subtitle {
@@ -133,18 +139,24 @@ router.get('/', (req, res) => {
     color: #22c55e;
     text-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
 }
-                   .account {
-    margin-top: auto;
-    background: rgba(18, 18, 28, 0.9);
-    border: 1px solid #242438;
-    padding: 12px;
-    border-radius: 12px;
+.account {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 18px;
+
+    background: #1f2937;
+    border: 1px solid #2f3b50;
+    padding: 14px;
+    border-radius: 14px;
+
     cursor: pointer;
     transition: 0.2s ease;
+    z-index: 10;
 }
 
 .account:hover {
-    background: rgba(35, 35, 55, 0.95);
+    background: #242438;
     border-color: #7c3aed;
 }
 
@@ -165,6 +177,10 @@ router.get('/', (req, res) => {
     margin-top: 10px;
     padding-top: 10px;
     border-top: 1px solid #2a2a3d;
+}
+
+.account-menu p {
+    margin: 8px 0;
 }
 
 .account-menu a {
