@@ -84,30 +84,29 @@ export async function createInitialHelpMenu(client) {
     const embed = createEmbed({
         title: `📖 ${botName} Help Menu`,
         description:
-            "This is the Help menu for Beyond Two Wheel's official bot",
+            "This is the official bot for the Beyond Two Wheels Collective.",
         color: "primary",
         thumbnail: client.user?.displayAvatarURL?.({ size: 1024 }),
+
         fields: [
             {
-                name: "What is this bot about?",
-                value: [
-                    "This bot is the Official bot for Beyond Two wheels.",
-                    "",
-                ].join("\n"),
+                name: "Whats this bot about?",
+                value:
+                    "A multi-purpose Discord bot for Beyond Two Wheels, built to handle moderation, server management, giveaways, tickets, leveling, welcome systems, counters, reaction roles, and other community features.",
                 inline: false,
             },
+
             {
-                name: "ℹ️ How It Works",
-                value: [
-                    "• Dashboard commands manage each feature visually",
-                    "• Settings are saved per server",
-                    "• Slash commands and prefixes both work once enabled",
-                ].join("\n"),
+                name: "Found a bug?",
+                value:
+                    "If you've found a bug or something isn't working correctly, click the **Report Bug** button below to submit a report. You can also report bugs or get help in our **Support Server**.",
                 inline: false,
             },
+
             {
-                name: "\u200B",
-                value: `-# ${botName} was created with great love by Xander Stephens`,
+                name: "Click below for the list of commands",
+                value:
+                    "Want to see everything the bot has to offer? Click the button below to browse through the full list of available commands. You can explore commands by category, discover new features, and find the tools you need to manage and enjoy the Beyond Two Wheels community. Whether you're looking for moderation tools, server utilities, community features, or something else, the command list has everything in one place.",
                 inline: false,
             },
         ],
@@ -135,14 +134,14 @@ export async function createInitialHelpMenu(client) {
         options
     );
 
-    const buttonRow = new ActionRowBuilder().addComponents([
+    const buttonRow = new ActionRowBuilder().addComponents(
         bugReportButton,
-        supportButton,
-    ]);
+        supportButton
+    );
 
     return {
         embeds: [embed],
-        components: [buttonRow, selectRow],
+        components: [selectRow, buttonRow],
     };
 }
 
@@ -154,39 +153,59 @@ export default {
         .setDescription("Displays the help menu with all available commands"),
 
     async execute(interaction, guildConfig, client) {
-        await InteractionHelper.safeDefer(interaction);
+        const deferSuccess =
+            await InteractionHelper.safeDefer(interaction);
 
-        const { embeds, components } =
-            await createInitialHelpMenu(client);
+        if (!deferSuccess) {
+            logger.warn("Help interaction defer failed", {
+                userId: interaction.user.id,
+                guildId: interaction.guildId,
+            });
+            return;
+        }
 
-        await InteractionHelper.safeEditReply(interaction, {
-            embeds,
-            components,
-        });
+        try {
+            const { embeds, components } =
+                await createInitialHelpMenu(client);
 
-        setTimeout(async () => {
-            try {
-                if (!InteractionHelper.isInteractionValid(interaction)) {
-                    return;
+            await InteractionHelper.safeEditReply(interaction, {
+                embeds,
+                components,
+            });
+
+            setTimeout(async () => {
+                try {
+                    if (!InteractionHelper.isInteractionValid(interaction)) {
+                        return;
+                    }
+
+                    const closedEmbed = createEmbed({
+                        title: "Help menu closed",
+                        description:
+                            "Help menu has been closed, use /help again.",
+                        color: "secondary",
+                    });
+
+                    await InteractionHelper.safeEditReply(interaction, {
+                        embeds: [closedEmbed],
+                        components: [],
+                    });
+                } catch (error) {
+                    logger.debug(
+                        "Help menu close edit failed (interaction may have expired):",
+                        error?.message
+                    );
                 }
+            }, HELP_MENU_TIMEOUT_MS);
+        } catch (error) {
+            logger.error("Failed to create help menu:", error);
 
-                const closedEmbed = createEmbed({
-                    title: "Help menu closed",
-                    description:
-                        "Help menu has been closed, use /help again.",
-                    color: "secondary",
-                });
-
-                await InteractionHelper.safeEditReply(interaction, {
-                    embeds: [closedEmbed],
-                    components: [],
-                });
-            } catch (error) {
-                logger.debug(
-                    "Help menu close edit failed (interaction may have expired):",
-                    error?.message
-                );
-            }
-        }, HELP_MENU_TIMEOUT_MS);
+            await InteractionHelper.safeEditReply(interaction, {
+                content:
+                    "❌ Something went wrong while loading the help menu.",
+                embeds: [],
+                components: [],
+            });
+        }
     },
 };
