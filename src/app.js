@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { refreshBanSync } from './services/moderation/banSyncService.js';
 import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import express from 'express';
@@ -231,29 +232,30 @@ class TitanBot extends Client {
 
   setupCronJobs() {
     cron.schedule(
-      '0 6 * * *',
-      runSafeTask(
-        'birthday_check',
-        () => checkBirthdays(this)
-      )
+        '0 6 * * *',
+        runSafeTask(
+            'birthday_check',
+            () => checkBirthdays(this)
+        )
     );
 
     cron.schedule(
-      '* * * * *',
-      runSafeTask(
-        'giveaway_check',
-        () => checkGiveaways(this)
-      )
+        '* * * * *',
+        runSafeTask(
+            'giveaway_check',
+            () => checkGiveaways(this)
+        )
     );
 
+    // Ban synchronization - runs every 15 minutes
     cron.schedule(
-      '*/15 * * * *',
-      runSafeTask(
-        'counter_update',
-        () => this.updateAllCounters()
-      )
+        '*/15 * * * *',
+        runSafeTask(
+            'ban_sync_refresh',
+            () => refreshBanSync(this)
+        )
     );
-  }
+}
 
   async updateAllCounters() {
     if (!this.db) {
