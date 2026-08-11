@@ -133,28 +133,58 @@ router.get('/', (req, res) => {
     color: #22c55e;
     text-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
 }
-                    .account {
-                        margin-top: 20px;
-                        background: #1f2937;
-                        padding: 25px;
-                        border-radius: 12px;
-                    }
-                        .account-menu {
-                         display: none;
-                  }
-                </style>
-            </head>
+                   .account {
+    margin-top: auto;
+    background: rgba(18, 18, 28, 0.9);
+    border: 1px solid #242438;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.account:hover {
+    background: rgba(35, 35, 55, 0.95);
+    border-color: #7c3aed;
+}
+
+.account h2 {
+    font-size: 14px;
+    margin: 0;
+    color: #ffffff;
+}
+
+.account p {
+    font-size: 11px;
+    color: #8f8fa3;
+    margin: 3px 0 0;
+}
+
+.account-menu {
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #2a2a3d;
+}
+
+.account-menu a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 8px 4px;
+    font-size: 13px;
+    border-radius: 6px;
+}
+
+.account-menu a:hover {
+    background: #242438;
+}
 
             <body>
                 <div class="sidebar">
                     <div class="brand">⚙️ BTW Mechanic</div>
 <div class="account" onclick="toggleAccountMenu()">
                         <h2>${escapeHtml(req.session.user.username)}</h2>
-
-                        <p>
-                            Logged in as
-                            <strong>${escapeHtml(req.session.user.username)}</strong>
-                        </p>
 
                         <div class="account-menu" id="accountMenu">
     <p>
@@ -167,9 +197,7 @@ router.get('/', (req, res) => {
     <a href="/dashboard/logout">🚪 Log out</a>
 </div>
                     </div>
-                    <a class="logout" href="/dashboard/logout">
-                        Logout
-                    </a>
+
                 </div>
 
                 <div class="container">
@@ -204,7 +232,7 @@ router.get('/', (req, res) => {
 
                     
                 </div>
-                
+
                 <script>
     function toggleAccountMenu() {
         const menu = document.getElementById('accountMenu');
