@@ -184,21 +184,23 @@ router.get('/', (req, res) => {
                 <div class="sidebar">
                     <div class="brand">⚙️ BTW Mechanic</div>
 <div class="account" onclick="toggleAccountMenu()">
-                        <h2>${escapeHtml(req.session.user.username)}</h2>
+    <h2>${escapeHtml(req.session.user.username)}</h2>
 
-                        <div class="account-menu" id="accountMenu">
     <p>
-        Discord ID:
-        <strong>${escapeHtml(req.session.user.id)}</strong>
+        Logged in as
+        <strong>${escapeHtml(req.session.user.username)}</strong>
     </p>
 
-    <a href="/dashboard">⚙️ Settings</a>
+    <div class="account-menu" id="accountMenu">
+        <p>
+            Discord ID:
+            <strong>${escapeHtml(req.session.user.id)}</strong>
+        </p>
 
-    <a href="/dashboard/logout">🚪 Log out</a>
+        <a href="/dashboard">⚙️ Settings</a>
+        <a href="/dashboard/logout">🚪 Log out</a>
+    </div>
 </div>
-                    </div>
-
-                </div>
 
                 <div class="container">
                     <h1>Dashboard</h1>
