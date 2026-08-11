@@ -462,7 +462,7 @@ class TitanBot extends Client {
 }
 
 try {
-  const bot = new Titanbot();
+  const bot = new TitanBot();
 
   process.on(
     'SIGTERM',
