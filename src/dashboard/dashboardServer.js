@@ -180,6 +180,11 @@ router.get('/', (req, res) => {
     background: #242438;
 }
 
+</style>
+</head>
+
+<body>
+
             <body>
                 <div class="sidebar">
                     <div class="brand">⚙️ BTW Mechanic</div>
