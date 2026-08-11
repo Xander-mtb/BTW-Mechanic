@@ -1,12 +1,12 @@
 import express from 'express';
 import session from 'express-session';
 
-const app = express();
+const router = express.Router();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }));
 
-app.use(
+router.use(
     session({
         secret: process.env.DASHBOARD_SESSION_SECRET,
         resave: false,
@@ -30,7 +30,7 @@ function getDiscordOAuthUrl() {
     return `https://discord.com/oauth2/authorize?${params.toString()}`;
 }
 
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
     if (req.session.user) {
         return res.send(`
             <!DOCTYPE html>
@@ -86,7 +86,7 @@ app.get('/', (req, res) => {
                         You are successfully logged into the dashboard.
                     </p>
 
-                    <a class="button" href="/logout">
+                    <a class="button" href="/dashboard/logout">
                         Logout
                     </a>
                 </div>
@@ -144,10 +144,6 @@ app.get('/', (req, res) => {
                     border-radius: 8px;
                     font-weight: bold;
                 }
-
-                .login:hover {
-                    background: #4752c4;
-                }
             </style>
         </head>
 
@@ -161,7 +157,7 @@ app.get('/', (req, res) => {
                     Manage your Discord bot from one simple dashboard.
                 </p>
 
-                <a class="login" href="/auth/discord">
+                <a class="login" href="/dashboard/auth/discord">
                     Login with Discord
                 </a>
             </div>
@@ -170,16 +166,18 @@ app.get('/', (req, res) => {
     `);
 });
 
-app.get('/auth/discord', (req, res) => {
+router.get('/auth/discord', (req, res) => {
     res.redirect(getDiscordOAuthUrl());
 });
 
-app.get('/auth/discord/callback', async (req, res) => {
+router.get('/auth/discord/callback', async (req, res) => {
     try {
         const { code } = req.query;
 
         if (!code) {
-            return res.status(400).send('Missing Discord authorization code.');
+            return res
+                .status(400)
+                .send('Missing Discord authorization code.');
         }
 
         const tokenResponse = await fetch(
@@ -202,17 +200,22 @@ app.get('/auth/discord/callback', async (req, res) => {
         const tokenData = await tokenResponse.json();
 
         if (!tokenResponse.ok) {
-            console.error('Discord OAuth token error:', tokenData);
+            console.error(
+                'Discord OAuth token error:',
+                tokenData
+            );
+
             return res
                 .status(500)
-                .send('Discord login failed while getting the access token.');
+                .send('Discord login failed.');
         }
 
         const userResponse = await fetch(
             'https://discord.com/api/users/@me',
             {
                 headers: {
-                    Authorization: `${tokenData.token_type} ${tokenData.access_token}`,
+                    Authorization:
+                        `${tokenData.token_type} ${tokenData.access_token}`,
                 },
             }
         );
@@ -220,7 +223,11 @@ app.get('/auth/discord/callback', async (req, res) => {
         const user = await userResponse.json();
 
         if (!userResponse.ok) {
-            console.error('Discord user error:', user);
+            console.error(
+                'Discord user error:',
+                user
+            );
+
             return res
                 .status(500)
                 .send('Discord login failed while getting your user information.');
@@ -228,9 +235,12 @@ app.get('/auth/discord/callback', async (req, res) => {
 
         req.session.user = user;
 
-        res.redirect('/');
+        res.redirect('/dashboard');
     } catch (error) {
-        console.error('Discord OAuth error:', error);
+        console.error(
+            'Discord OAuth error:',
+            error
+        );
 
         res
             .status(500)
@@ -238,9 +248,9 @@ app.get('/auth/discord/callback', async (req, res) => {
     }
 });
 
-app.get('/logout', (req, res) => {
+router.get('/logout', (req, res) => {
     req.session.destroy(() => {
-        res.redirect('/');
+        res.redirect('/dashboard');
     });
 });
 
@@ -253,10 +263,4 @@ function escapeHtml(value = '') {
         .replaceAll("'", '&#039;');
 }
 
-export function startDashboardServer(port = 3000) {
-    app.listen(port, '0.0.0.0', () => {
-        console.log(`Dashboard running on port ${port}`);
-    });
-}
-
-export default app;
+export default router;
