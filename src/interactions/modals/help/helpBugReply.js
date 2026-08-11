@@ -11,12 +11,27 @@ export default [
 
         async execute(interaction, client, args) {
             try {
-                // Get the reporter ID from the modal custom ID.
-                // Expected format:
-                // help-bug-reply-modal:123456789012345678
+                /*
+                 * The modal custom ID looks like:
+                 *
+                 * help-bug-reply-modal:123456789012345678
+                 *
+                 * The interaction system passes the part after
+                 * the colon in args.
+                 */
 
-                const parts = interaction.customId.split(':');
-                const reporterId = args?.[0] || parts[1];
+                let reporterId = args?.[0];
+
+                /*
+                 * Fallback: get the ID directly from customId
+                 * if args wasn't provided.
+                 */
+                if (!reporterId) {
+                    const parts =
+                        interaction.customId.split(':');
+
+                    reporterId = parts[1];
+                }
 
                 if (!reporterId) {
                     throw new Error(
@@ -24,9 +39,10 @@ export default [
                     );
                 }
 
-                const replyText = interaction.fields
-                    .getTextInputValue(BUG_REPLY_ID)
-                    ?.trim();
+                const replyText =
+                    interaction.fields
+                        .getTextInputValue(BUG_REPLY_ID)
+                        ?.trim();
 
                 if (!replyText) {
                     await interaction.reply({
@@ -42,8 +58,11 @@ export default [
                     `Sending bug report response to ${reporterId}`
                 );
 
-                // Fetch the original reporter.
-                const reporter = await client.users.fetch(reporterId);
+                /*
+                 * Fetch the user from Discord.
+                 */
+                const reporter =
+                    await client.users.fetch(reporterId);
 
                 if (!reporter) {
                     throw new Error(
@@ -51,12 +70,14 @@ export default [
                     );
                 }
 
-                // Create the DM embed.
+                /*
+                 * Build the DM that the reporter receives.
+                 */
                 const responseEmbed = createEmbed({
                     title: '🐛 Bug Report Update',
 
                     description:
-                        'You have received an update regarding the bug you reported to **BTW Mechanic**.',
+                        'You have received an update regarding the bug you reported to BTW Mechanic.',
 
                     color: 'success',
 
@@ -75,16 +96,21 @@ export default [
 
                 responseEmbed.setTimestamp();
 
-                // Send the response to the reporter.
+                /*
+                 * Send the response to the reporter.
+                 */
                 await reporter.send({
                     embeds: [responseEmbed],
                 });
 
-                // Tell you the reply was successfully sent.
+                /*
+                 * Tell you that it was successfully sent.
+                 */
                 await interaction.reply({
                     content:
                         '✅ **Reply sent!**\n\n' +
                         `Your response has been sent to <@${reporterId}>.`,
+
                     flags: MessageFlags.Ephemeral,
                 });
 
