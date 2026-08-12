@@ -124,25 +124,28 @@ router.get('/', (req, res) => {
         /* SIDEBAR */
 
         .sidebar {
-            position: fixed;
+    position: fixed;
 
-            left: 0;
-            top: 0;
-            bottom: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
 
-            width: 240px;
+    width: 240px;
 
-            display: flex;
-            flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-            padding: 22px 14px 14px;
+    padding: 22px 14px 14px;
 
-            background: rgba(8, 8, 15, 0.96);
+    background: rgba(8, 8, 15, 0.96);
 
-            border-right: 1px solid #242438;
+    border-right: 1px solid #242438;
 
-            z-index: 100;
-        }
+    z-index: 100;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 
         .brand {
             padding: 4px 10px 24px;
