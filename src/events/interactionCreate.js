@@ -159,6 +159,21 @@ export default {
             if (!permissionAllowed) {
               return;
             }
+            if (client.db && interaction.guildId) {
+  try {
+    await client.db.query(
+      `INSERT INTO command_usage (guild_id, user_id, command_name)
+       VALUES ($1, $2, $3)`,
+      [
+        interaction.guildId,
+        interaction.user.id,
+        interaction.commandName
+      ]
+    );
+  } catch (error) {
+    logger.warn('Failed to record command usage:', error);
+  }
+}
 
             await command.execute(interaction, guildConfig, client);
           } catch (error) {

@@ -167,11 +167,25 @@ export const tableStatements = [
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`,
 
-    `CREATE TABLE IF NOT EXISTS ${t.cache_data} (
+        `CREATE TABLE IF NOT EXISTS ${t.cache_data} (
         key VARCHAR(255) PRIMARY KEY,
         value JSONB NOT NULL,
         expires_at TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+
+    `CREATE TABLE IF NOT EXISTS command_usage (
+        id SERIAL PRIMARY KEY,
+        guild_id VARCHAR(20),
+        user_id VARCHAR(20),
+        command_name VARCHAR(100) NOT NULL,
+        used_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+
+    `CREATE TABLE IF NOT EXISTS message_stats (
+        guild_id VARCHAR(20) PRIMARY KEY,
+        message_count BIGINT DEFAULT 0,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`,
 ];
 
@@ -194,6 +208,10 @@ export const indexStatements = [
     `CREATE INDEX IF NOT EXISTS idx_verification_audit_created_at ON ${t.verification_audit}(created_at)`,
     `CREATE INDEX IF NOT EXISTS idx_temp_data_expires_at ON ${t.temp_data}(expires_at)`,
     `CREATE INDEX IF NOT EXISTS idx_cache_data_expires_at ON ${t.cache_data}(expires_at)`,
+    `CREATE INDEX IF NOT EXISTS idx_command_usage_guild_id ON command_usage(guild_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_command_usage_used_at ON command_usage(used_at)`,
+    `CREATE INDEX IF NOT EXISTS idx_command_usage_command_name ON command_usage(command_name)`,
+    `CREATE INDEX IF NOT EXISTS idx_message_stats_updated_at ON message_stats(updated_at)`,
 ];
 
 export const UPDATE_TIMESTAMP_FUNCTION = `
