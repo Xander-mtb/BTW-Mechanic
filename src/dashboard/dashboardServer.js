@@ -48,46 +48,111 @@ function getDiscordOAuthUrl() {
 router.get('/', async (req, res) => {
     const bot = req.app.locals.bot;
 
+    /*
+    |--------------------------------------------------------------------------
+    | COMMAND USAGE PERIOD
+    |--------------------------------------------------------------------------
+    */
+
+    const commandDays =
+        [7, 14, 30].includes(Number(req.query.commandDays))
+            ? Number(req.query.commandDays)
+            : 14;
+
+    const selectedPeriod = commandDays;
+
+    const periodLabel =
+        selectedPeriod === 7
+            ? 'Last 7 Days'
+            : selectedPeriod === 30
+                ? 'Last 1 Month'
+                : 'Last 14 Days';
+
     let commandUsageTotal = 0;
     let topCommands = [];
     let commandUsageByDay = [];
 
     try {
         if (bot?.db?.db?.pool) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | TOTAL COMMAND USAGE
+            |--------------------------------------------------------------------------
+            */
+
             const totalResult = await bot.db.db.pool.query(`
                 SELECT COUNT(*)::int AS count
                 FROM command_usage
             `);
 
-            commandUsageTotal = totalResult.rows[0]?.count ?? 0;
+            commandUsageTotal =
+                totalResult.rows[0]?.count ?? 0;
 
-            const topCommandsResult = await bot.db.db.pool.query(`
-                SELECT
-                    command_name,
-                    COUNT(*)::int AS count
-                FROM command_usage
-                WHERE used_at >= NOW() - INTERVAL '14 days'
-                GROUP BY command_name
-                ORDER BY count DESC
-                LIMIT 4
-            `);
+            /*
+            |--------------------------------------------------------------------------
+            | TOP COMMANDS
+            |--------------------------------------------------------------------------
+            */
 
-            topCommands = topCommandsResult.rows;
+            const topCommandsResult =
+                await bot.db.db.pool.query(`
+                    SELECT
+                        command_name,
+                        COUNT(*)::int AS count
+                    FROM command_usage
+                    WHERE used_at >= NOW() - INTERVAL '14 days'
+                    GROUP BY command_name
+                    ORDER BY count DESC
+                    LIMIT 4
+                `);
 
-            const dailyResult = await bot.db.db.pool.query(`
-                SELECT
-                    DATE(used_at) AS day,
-                    COUNT(*)::int AS count
-                FROM command_usage
-                WHERE used_at >= CURRENT_DATE - INTERVAL '13 days'
-                GROUP BY DATE(used_at)
-                ORDER BY day ASC
-            `);
+            topCommands =
+                topCommandsResult.rows;
 
-            commandUsageByDay = dailyResult.rows;
+            /*
+            |--------------------------------------------------------------------------
+            | COMMAND USAGE GRAPH
+            |--------------------------------------------------------------------------
+            */
+
+            const dailyResult =
+                await bot.db.db.pool.query(`
+                    WITH days AS (
+                        SELECT generate_series(
+                            CURRENT_DATE - ($1::int - 1),
+                            CURRENT_DATE,
+                            INTERVAL '1 day'
+                        )::date AS day
+                    ),
+                    usage AS (
+                        SELECT
+                            DATE(used_at) AS day,
+                            COUNT(*)::int AS count
+                        FROM command_usage
+                        WHERE used_at >= CURRENT_DATE - ($1::int - 1)
+                        GROUP BY DATE(used_at)
+                    )
+                    SELECT
+                        days.day,
+                        COALESCE(usage.count, 0)::int AS count
+                    FROM days
+                    LEFT JOIN usage
+                        ON usage.day = days.day
+                    ORDER BY days.day ASC
+                `,
+                [commandDays]);
+
+            commandUsageByDay =
+                dailyResult.rows;
         }
+
     } catch (error) {
-        console.error('Dashboard command usage error:', error);
+
+        console.error(
+            'Dashboard command usage error:',
+            error
+        );
     }
 
     /*
@@ -97,25 +162,40 @@ router.get('/', async (req, res) => {
     */
 
     if (req.session.user) {
-        const user = req.session.user;
 
-        const username = escapeHtml(
-            user.global_name || user.username || 'User'
-        );
+        const user =
+            req.session.user;
 
-        const userId = escapeHtml(user.id || '');
+        const username =
+            escapeHtml(
+                user.global_name ||
+                user.username ||
+                'User'
+            );
 
-        const avatarUrl = user.avatar
-            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
-            : 'https://cdn.discordapp.com/embed/avatars/0.png';
+        const userId =
+            escapeHtml(
+                user.id || ''
+            );
 
-        const serverCount = bot?.guilds?.cache?.size ?? 0;
-        const botOnline = bot?.isReady() ?? false;
-        const ping = bot?.ws?.ping;
+        const avatarUrl =
+            user.avatar
+                ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
+                : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+        const serverCount =
+            bot?.guilds?.cache?.size ?? 0;
+
+        const botOnline =
+            bot?.isReady() ?? false;
+
+        const ping =
+            bot?.ws?.ping;
 
         const userCount =
             bot?.guilds?.cache?.reduce(
-                (total, guild) => total + (guild.memberCount ?? 0),
+                (total, guild) =>
+                    total + (guild.memberCount ?? 0),
                 0
             ) ?? 0;
 
@@ -125,52 +205,80 @@ router.get('/', async (req, res) => {
         |--------------------------------------------------------------------------
         */
 
-        const chartMax = Math.max(
-            ...commandUsageByDay.map(
-                row => Number(row.count) || 0
-            ),
-            1
-        );
+        const chartMax =
+            Math.max(
+                ...commandUsageByDay.map(
+                    row =>
+                        Number(row.count) || 0
+                ),
+                1
+            );
 
-        const chartPoints = commandUsageByDay.map(
-            (row, index) => {
-                const x =
-                    commandUsageByDay.length === 1
-                        ? 400
-                        : (index /
-                              (commandUsageByDay.length - 1)) *
-                          800;
+        const chartPoints =
+            commandUsageByDay.map(
+                (row, index) => {
 
-                const count = Number(row.count) || 0;
+                    const x =
+                        commandUsageByDay.length === 1
+                            ? 400
+                            : (
+                                index /
+                                (
+                                    commandUsageByDay.length - 1
+                                )
+                            ) * 800;
 
-                const y =
-                    135 -
-                    ((count / chartMax) * 110);
+                    const count =
+                        Number(row.count) || 0;
 
-                return {
-                    x,
-                    y,
-                };
-            }
-        );
+                    const y =
+                        135 -
+                        (
+                            (count / chartMax) *
+                            110
+                        );
 
-        const chartLinePath = chartPoints.length
-            ? `M${chartPoints
-                  .map(point => `${point.x} ${point.y}`)
-                  .join(' L')}`
-            : 'M0 120 L800 120';
+                    return {
+                        x,
+                        y,
+                    };
+                }
+            );
 
-        const chartAreaPath = chartPoints.length
-            ? `${chartLinePath} L800 150 L0 150 Z`
-            : 'M0 120 L800 120 L800 150 L0 150 Z';
+        const chartLinePath =
+            chartPoints.length
+                ? `M${chartPoints
+                    .map(
+                        point =>
+                            `${point.x} ${point.y}`
+                    )
+                    .join(' L')}`
+                : 'M0 120 L800 120';
+
+        const chartAreaPath =
+            chartPoints.length
+                ? `${chartLinePath} L800 150 L0 150 Z`
+                : 'M0 120 L800 120 L800 150 L0 150 Z';
 
         const chartLastPoint =
             chartPoints.length
-                ? chartPoints[chartPoints.length - 1]
-                : { x: 0, y: 120 };
+                ? chartPoints[
+                    chartPoints.length - 1
+                ]
+                : {
+                    x: 0,
+                    y: 120,
+                };
+
+        /*
+        |--------------------------------------------------------------------------
+        | DASHBOARD HTML
+        |--------------------------------------------------------------------------
+        */
 
         return res.send(`
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -310,7 +418,12 @@ router.get('/', async (req, res) => {
         .nav a:hover {
             color: #ffffff;
 
-            background: rgba(124, 58, 237, 0.12);
+            background: rgba(
+                124,
+                58,
+                237,
+                0.12
+            );
         }
 
         .nav a.active {
@@ -319,13 +432,29 @@ router.get('/', async (req, res) => {
             background:
                 linear-gradient(
                     90deg,
-                    rgba(124, 58, 237, 0.28),
-                    rgba(124, 58, 237, 0.08)
+                    rgba(
+                        124,
+                        58,
+                        237,
+                        0.28
+                    ),
+                    rgba(
+                        124,
+                        58,
+                        237,
+                        0.08
+                    )
                 );
 
             box-shadow:
                 inset 2px 0 0 #8b5cf6,
-                0 0 20px rgba(124, 58, 237, 0.12);
+                0 0 20px
+                rgba(
+                    124,
+                    58,
+                    237,
+                    0.12
+                );
         }
 
         .nav-icon {
@@ -365,7 +494,13 @@ router.get('/', async (req, res) => {
             background: #202a3b;
 
             box-shadow:
-                0 0 24px rgba(124, 58, 237, 0.15);
+                0 0 24px
+                rgba(
+                    124,
+                    58,
+                    237,
+                    0.15
+                );
         }
 
         .profile-main {
@@ -419,7 +554,8 @@ router.get('/', async (req, res) => {
             border-top: 1px solid #30394a;
         }
 
-        .profile-card.open .profile-menu {
+        .profile-card.open
+        .profile-menu {
             display: block;
         }
 
@@ -531,7 +667,9 @@ router.get('/', async (req, res) => {
             border-radius: 50%;
 
             background:
-                ${botOnline ? '#22c55e' : '#ef4444'};
+                ${botOnline
+                    ? '#22c55e'
+                    : '#ef4444'};
 
             box-shadow:
                 0 0 8px
@@ -562,7 +700,13 @@ router.get('/', async (req, res) => {
             font-weight: 700;
 
             box-shadow:
-                0 0 18px rgba(124, 58, 237, 0.25);
+                0 0 18px
+                rgba(
+                    124,
+                    58,
+                    237,
+                    0.25
+                );
 
             transition: 0.2s ease;
         }
@@ -571,7 +715,13 @@ router.get('/', async (req, res) => {
             transform: translateY(-1px);
 
             box-shadow:
-                0 0 25px rgba(124, 58, 237, 0.45);
+                0 0 25px
+                rgba(
+                    124,
+                    58,
+                    237,
+                    0.45
+                );
         }
 
         /* STATISTICS */
@@ -580,7 +730,10 @@ router.get('/', async (req, res) => {
             display: grid;
 
             grid-template-columns:
-                repeat(4, minmax(0, 1fr));
+                repeat(
+                    4,
+                    minmax(0, 1fr)
+                );
 
             gap: 12px;
 
@@ -599,7 +752,13 @@ router.get('/', async (req, res) => {
             border-radius: 9px;
 
             box-shadow:
-                0 8px 28px rgba(76, 29, 149, 0.08);
+                0 8px 28px
+                rgba(
+                    76,
+                    29,
+                    149,
+                    0.08
+                );
         }
 
         .stat-top {
@@ -702,6 +861,33 @@ router.get('/', async (req, res) => {
             border-radius: 5px;
 
             font-size: 8px;
+
+            cursor: pointer;
+
+            outline: none;
+        }
+
+        .period:hover {
+            border-color: #7c3aed;
+        }
+
+        .period:focus {
+            border-color: #8b5cf6;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(
+                    139,
+                    92,
+                    246,
+                    0.15
+                );
+        }
+
+        .period option {
+            background: #12111d;
+
+            color: #ffffff;
         }
 
         /* CHART */
@@ -713,12 +899,22 @@ router.get('/', async (req, res) => {
 
             background:
                 linear-gradient(
-                    rgba(255,255,255,.035) 1px,
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        .035
+                    ) 1px,
                     transparent 1px
                 ),
                 linear-gradient(
                     90deg,
-                    rgba(255,255,255,.025) 1px,
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        .025
+                    ) 1px,
                     transparent 1px
                 );
 
@@ -762,7 +958,13 @@ router.get('/', async (req, res) => {
 
             filter:
                 drop-shadow(
-                    0 0 5px rgba(139,92,246,.55)
+                    0 0 5px
+                    rgba(
+                        139,
+                        92,
+                        246,
+                        .55
+                    )
                 );
         }
 
@@ -1099,6 +1301,7 @@ router.get('/', async (req, res) => {
         /* MOBILE */
 
         @media (max-width: 1000px) {
+
             .stats {
                 grid-template-columns:
                     repeat(2, 1fr);
@@ -1114,6 +1317,7 @@ router.get('/', async (req, res) => {
         }
 
         @media (max-width: 720px) {
+
             .sidebar {
                 position: relative;
 
@@ -1442,14 +1646,39 @@ router.get('/', async (req, res) => {
                         </div>
 
                         <div class="panel-subtitle">
-                            Total commands used over the last 14 days
+                            Total commands used over the selected period
                         </div>
 
                     </div>
 
-                    <div class="period">
-                        Last 14 Days
-                    </div>
+                    <select
+                        class="period"
+                        id="commandPeriod"
+                        onchange="changeCommandPeriod(this.value)"
+                    >
+
+                        <option
+                            value="7"
+                            ${selectedPeriod === 7 ? 'selected' : ''}
+                        >
+                            Last 7 Days
+                        </option>
+
+                        <option
+                            value="14"
+                            ${selectedPeriod === 14 ? 'selected' : ''}
+                        >
+                            Last 14 Days
+                        </option>
+
+                        <option
+                            value="30"
+                            ${selectedPeriod === 30 ? 'selected' : ''}
+                        >
+                            Last 1 Month
+                        </option>
+
+                    </select>
 
                 </div>
 
@@ -1513,12 +1742,28 @@ router.get('/', async (req, res) => {
 
                         <div class="chart-labels">
 
-                            <span>Aug 1</span>
-                            <span>Aug 3</span>
-                            <span>Aug 5</span>
-                            <span>Aug 7</span>
-                            <span>Aug 9</span>
-                            <span>Aug 11</span>
+                            ${commandUsageByDay
+                                .map(row => {
+
+                                    const date =
+                                        new Date(
+                                            row.day
+                                        );
+
+                                    return `
+                                        <span>
+                                            ${date.toLocaleDateString(
+                                                'en-GB',
+                                                {
+                                                    day: 'numeric',
+                                                    month: 'short'
+                                                }
+                                            )}
+                                        </span>
+                                    `;
+
+                                })
+                                .join('')}
 
                         </div>
 
@@ -1668,17 +1913,18 @@ router.get('/', async (req, res) => {
                                     <span
                                         style="width: ${Math.max(
                                             10,
-                                            (Number(
-                                                command.count
-                                            ) /
+                                            (
+                                                Number(
+                                                    command.count
+                                                ) /
                                                 Math.max(
                                                     Number(
                                                         topCommands[0]
                                                             ?.count
                                                     ) || 1,
                                                     1
-                                                )) *
-                                                100
+                                                )
+                                            ) * 100
                                         )}%"
                                     ></span>
 
@@ -1920,11 +2166,30 @@ router.get('/', async (req, res) => {
             }
 
             const card =
-                document.getElementById('profileCard');
+                document.getElementById(
+                    'profileCard'
+                );
 
             if (card) {
                 card.classList.toggle('open');
             }
+
+        }
+
+        function changeCommandPeriod(days) {
+
+            const url =
+                new URL(
+                    window.location.href
+                );
+
+            url.searchParams.set(
+                'commandDays',
+                days
+            );
+
+            window.location.href =
+                url.toString();
 
         }
 
@@ -2020,7 +2285,12 @@ router.get('/', async (req, res) => {
             text-align: center;
 
             background:
-                rgba(15, 15, 30, 0.85);
+                rgba(
+                    15,
+                    15,
+                    30,
+                    0.85
+                );
 
             border:
                 1px solid #2a1748;
@@ -2029,7 +2299,12 @@ router.get('/', async (req, res) => {
 
             box-shadow:
                 0 8px 35px
-                rgba(124, 58, 237, 0.22);
+                rgba(
+                    124,
+                    58,
+                    237,
+                    0.22
+                );
         }
 
         .logo {
@@ -2109,9 +2384,14 @@ router.get('/', async (req, res) => {
 |--------------------------------------------------------------------------
 */
 
-router.get('/auth/discord', (req, res) => {
-    res.redirect(getDiscordOAuthUrl());
-});
+router.get(
+    '/auth/discord',
+    (req, res) => {
+        res.redirect(
+            getDiscordOAuthUrl()
+        );
+    }
+);
 
 router.get(
     '/auth/discord/callback',
@@ -2119,7 +2399,8 @@ router.get(
 
         try {
 
-            const { code } = req.query;
+            const { code } =
+                req.query;
 
             if (!code) {
                 return res
@@ -2129,35 +2410,41 @@ router.get(
                     );
             }
 
-            const tokenResponse = await fetch(
-                'https://discord.com/api/oauth2/token',
-                {
-                    method: 'POST',
+            const tokenResponse =
+                await fetch(
+                    'https://discord.com/api/oauth2/token',
+                    {
+                        method: 'POST',
 
-                    headers: {
-                        'Content-Type':
-                            'application/x-www-form-urlencoded',
-                    },
+                        headers: {
+                            'Content-Type':
+                                'application/x-www-form-urlencoded',
+                        },
 
-                    body: new URLSearchParams({
+                        body:
+                            new URLSearchParams({
 
-                        client_id:
-                            process.env.DISCORD_CLIENT_ID,
+                                client_id:
+                                    process.env
+                                        .DISCORD_CLIENT_ID,
 
-                        client_secret:
-                            process.env.DISCORD_CLIENT_SECRET,
+                                client_secret:
+                                    process.env
+                                        .DISCORD_CLIENT_SECRET,
 
-                        grant_type:
-                            'authorization_code',
+                                grant_type:
+                                    'authorization_code',
 
-                        code: String(code),
+                                code:
+                                    String(code),
 
-                        redirect_uri:
-                            process.env.DISCORD_REDIRECT_URI,
+                                redirect_uri:
+                                    process.env
+                                        .DISCORD_REDIRECT_URI,
 
-                    }),
-                }
-            );
+                            }),
+                    }
+                );
 
             const tokenData =
                 await tokenResponse.json();
@@ -2176,15 +2463,16 @@ router.get(
                     );
             }
 
-            const userResponse = await fetch(
-                'https://discord.com/api/users/@me',
-                {
-                    headers: {
-                        Authorization:
-                            `${tokenData.token_type} ${tokenData.access_token}`,
-                    },
-                }
-            );
+            const userResponse =
+                await fetch(
+                    'https://discord.com/api/users/@me',
+                    {
+                        headers: {
+                            Authorization:
+                                `${tokenData.token_type} ${tokenData.access_token}`,
+                        },
+                    }
+                );
 
             const user =
                 await userResponse.json();
@@ -2203,9 +2491,12 @@ router.get(
                     );
             }
 
-            req.session.user = user;
+            req.session.user =
+                user;
 
-            return res.redirect('/dashboard');
+            return res.redirect(
+                '/dashboard'
+            );
 
         } catch (error) {
 
@@ -2230,12 +2521,19 @@ router.get(
 |--------------------------------------------------------------------------
 */
 
-router.get('/logout', (req, res) => {
+router.get(
+    '/logout',
+    (req, res) => {
 
-    req.session.destroy(() => {
-        res.redirect('/dashboard');
-    });
+        req.session.destroy(
+            () => {
+                res.redirect(
+                    '/dashboard'
+                );
+            }
+        );
 
-});
+    }
+);
 
 export default router;
