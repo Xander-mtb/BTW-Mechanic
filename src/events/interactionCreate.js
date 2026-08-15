@@ -1,5 +1,6 @@
 import { Events, MessageFlags } from 'discord.js';
 import { logger } from '../utils/logger.js';
+import { db } from '../utils/database.js';
 import { getGuildConfig } from '../services/config/guildConfig.js';
 import {
   getBotMessage,
@@ -159,9 +160,9 @@ export default {
             if (!permissionAllowed) {
               return;
             }
-            if (client.db && interaction.guildId) {
+            if (interaction.guildId && db.isAvailable()) {
   try {
-    await client.db.query(
+    await db.db.pool.query(
       `INSERT INTO command_usage (guild_id, user_id, command_name)
        VALUES ($1, $2, $3)`,
       [
