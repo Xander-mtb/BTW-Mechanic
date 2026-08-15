@@ -66,7 +66,7 @@ router.get('/', async (req, res) => {
                     command_name,
                     COUNT(*)::int AS count
                 FROM command_usage
-                WHERE created_at >= NOW() - INTERVAL '14 days'
+                WHERE used_at >= NOW() - INTERVAL '14 days'
                 GROUP BY command_name
                 ORDER BY count DESC
                 LIMIT 4
@@ -76,11 +76,11 @@ router.get('/', async (req, res) => {
 
             const dailyResult = await bot.db.query(`
                 SELECT
-                    DATE(created_at) AS day,
+                    DATE(used_at) AS day,
                     COUNT(*)::int AS count
                 FROM command_usage
-                WHERE created_at >= CURRENT_DATE - INTERVAL '13 days'
-                GROUP BY DATE(created_at)
+                WHERE used_at >= CURRENT_DATE - INTERVAL '13 days'
+                GROUP BY DATE(used_at)
                 ORDER BY day ASC
             `);
 
