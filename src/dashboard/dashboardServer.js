@@ -45,8 +45,50 @@ function getDiscordOAuthUrl() {
 |--------------------------------------------------------------------------
 */
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
     const bot = req.app.locals.bot;
+
+    let commandUsageTotal = 0;
+    let topCommands = [];
+    let commandUsageByDay = [];
+
+    try {
+        if (bot?.db) {
+            const totalResult = await bot.db.query(`
+                SELECT COUNT(*)::int AS count
+                FROM command_usage
+            `);
+
+            commandUsageTotal = totalResult.rows[0]?.count ?? 0;
+
+            const topCommandsResult = await bot.db.query(`
+                SELECT
+                    command_name,
+                    COUNT(*)::int AS count
+                FROM command_usage
+                WHERE created_at >= NOW() - INTERVAL '14 days'
+                GROUP BY command_name
+                ORDER BY count DESC
+                LIMIT 4
+            `);
+
+            topCommands = topCommandsResult.rows;
+
+            const dailyResult = await bot.db.query(`
+                SELECT
+                    DATE(created_at) AS day,
+                    COUNT(*)::int AS count
+                FROM command_usage
+                WHERE created_at >= CURRENT_DATE - INTERVAL '13 days'
+                GROUP BY DATE(created_at)
+                ORDER BY day ASC
+            `);
+
+            commandUsageByDay = dailyResult.rows;
+        }
+    } catch (error) {
+        console.error('Dashboard command usage error:', error);
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -71,11 +113,68 @@ router.get('/', (req, res) => {
         const botOnline = bot?.isReady() ?? false;
         const ping = bot?.ws?.ping;
 
+        const userCount =
+            bot?.guilds?.cache?.reduce(
+                (total, guild) => total + (guild.memberCount ?? 0),
+                0
+            ) ?? 0;
+
+        /*
+        |--------------------------------------------------------------------------
+        | COMMAND CHART DATA
+        |--------------------------------------------------------------------------
+        */
+
+        const chartMax = Math.max(
+            ...commandUsageByDay.map(
+                row => Number(row.count) || 0
+            ),
+            1
+        );
+
+        const chartPoints = commandUsageByDay.map(
+            (row, index) => {
+                const x =
+                    commandUsageByDay.length === 1
+                        ? 400
+                        : (index /
+                              (commandUsageByDay.length - 1)) *
+                          800;
+
+                const count = Number(row.count) || 0;
+
+                const y =
+                    135 -
+                    ((count / chartMax) * 110);
+
+                return {
+                    x,
+                    y,
+                };
+            }
+        );
+
+        const chartLinePath = chartPoints.length
+            ? `M${chartPoints
+                  .map(point => `${point.x} ${point.y}`)
+                  .join(' L')}`
+            : 'M0 120 L800 120';
+
+        const chartAreaPath = chartPoints.length
+            ? `${chartLinePath} L800 150 L0 150 Z`
+            : 'M0 120 L800 120 L800 150 L0 150 Z';
+
+        const chartLastPoint =
+            chartPoints.length
+                ? chartPoints[chartPoints.length - 1]
+                : { x: 0, y: 120 };
+
         return res.send(`
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -86,6 +185,7 @@ router.get('/', (req, res) => {
     <title>BTW Mechanic Dashboard</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -124,28 +224,28 @@ router.get('/', (req, res) => {
         /* SIDEBAR */
 
         .sidebar {
-    position: fixed;
+            position: fixed;
 
-    left: 0;
-    top: 0;
-    bottom: 0;
+            left: 0;
+            top: 0;
+            bottom: 0;
 
-    width: 240px;
+            width: 240px;
 
-    display: flex;
-    flex-direction: column;
+            display: flex;
+            flex-direction: column;
 
-    padding: 22px 14px 14px;
+            padding: 22px 14px 14px;
 
-    background: rgba(8, 8, 15, 0.96);
+            background: rgba(8, 8, 15, 0.96);
 
-    border-right: 1px solid #242438;
+            border-right: 1px solid #242438;
 
-    z-index: 100;
+            z-index: 100;
 
-    overflow-y: auto;
-    overflow-x: hidden;
-}
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
 
         .brand {
             padding: 4px 10px 24px;
@@ -430,7 +530,8 @@ router.get('/', (req, res) => {
 
             border-radius: 50%;
 
-            background: ${botOnline ? '#22c55e' : '#ef4444'};
+            background:
+                ${botOnline ? '#22c55e' : '#ef4444'};
 
             box-shadow:
                 0 0 8px
@@ -1043,7 +1144,9 @@ router.get('/', (req, res) => {
                 grid-template-columns: 1fr;
             }
         }
+
     </style>
+
 </head>
 
 <body>
@@ -1053,11 +1156,15 @@ router.get('/', (req, res) => {
         <div class="brand">
 
             <div class="brand-title">
-                <span class="brand-icon">⚙</span>
+
+                <span class="brand-icon">
+                    ⚙
+                </span>
 
                 <span>
                     BTW Mechanic
                 </span>
+
             </div>
 
             <div class="brand-subtitle">
@@ -1263,11 +1370,11 @@ router.get('/', (req, res) => {
                 </div>
 
                 <div class="stat-value">
-                    —
+                    ${userCount.toLocaleString()}
                 </div>
 
                 <div class="stat-change">
-                    User data unavailable
+                    Total members
                 </div>
 
             </div>
@@ -1287,11 +1394,11 @@ router.get('/', (req, res) => {
                 </div>
 
                 <div class="stat-value">
-                    —
+                    ${userCount.toLocaleString()}
                 </div>
 
                 <div class="stat-change">
-                    Tracking unavailable
+                    Total members
                 </div>
 
             </div>
@@ -1311,11 +1418,11 @@ router.get('/', (req, res) => {
                 </div>
 
                 <div class="stat-value">
-                    —
+                    ${commandUsageTotal.toLocaleString()}
                 </div>
 
                 <div class="stat-change">
-                    Tracking unavailable
+                    Total commands
                 </div>
 
             </div>
@@ -1385,41 +1492,18 @@ router.get('/', (req, res) => {
 
                                 <path
                                     class="chart-area"
-                                    d="
-                                        M0 120
-                                        C40 100 60 115 95 88
-                                        C125 65 150 105 180 80
-                                        C220 45 245 95 280 67
-                                        C320 30 345 75 380 48
-                                        C420 15 450 78 485 42
-                                        C525 5 555 70 590 52
-                                        C630 28 660 65 700 35
-                                        C740 12 770 42 800 20
-                                        L800 150
-                                        L0 150
-                                        Z
-                                    "
+                                    d="${chartAreaPath}"
                                 />
 
                                 <path
                                     class="chart-path"
-                                    d="
-                                        M0 120
-                                        C40 100 60 115 95 88
-                                        C125 65 150 105 180 80
-                                        C220 45 245 95 280 67
-                                        C320 30 345 75 380 48
-                                        C420 15 450 78 485 42
-                                        C525 5 555 70 590 52
-                                        C630 28 660 65 700 35
-                                        C740 12 770 42 800 20
-                                    "
+                                    d="${chartLinePath}"
                                 />
 
                                 <circle
                                     class="chart-dot"
-                                    cx="485"
-                                    cy="42"
+                                    cx="${chartLastPoint.x}"
+                                    cy="${chartLastPoint.y}"
                                     r="4"
                                 />
 
@@ -1560,101 +1644,84 @@ router.get('/', (req, res) => {
 
                 <div class="panel-body">
 
-                    <div class="command">
+                    ${
+                        topCommands.length
+                            ? topCommands
+                                  .map(
+                                      (command, index) => `
+                        <div class="command">
 
-                        <span class="command-rank">
-                            1.
-                        </span>
+                            <span class="command-rank">
+                                ${index + 1}.
+                            </span>
 
-                        <div>
+                            <div>
 
-                            <div class="command-name">
-                                /help
+                                <div class="command-name">
+                                    /${escapeHtml(
+                                        command.command_name
+                                    )}
+                                </div>
+
+                                <div class="command-bar">
+
+                                    <span
+                                        style="width: ${Math.max(
+                                            10,
+                                            (Number(
+                                                command.count
+                                            ) /
+                                                Math.max(
+                                                    Number(
+                                                        topCommands[0]
+                                                            ?.count
+                                                    ) || 1,
+                                                    1
+                                                )) *
+                                                100
+                                        )}%"
+                                    ></span>
+
+                                </div>
+
                             </div>
 
-                            <div class="command-bar">
-                                <span style="width: 92%"></span>
-                            </div>
+                            <span class="command-count">
+                                ${Number(
+                                    command.count
+                                ).toLocaleString()}
+                            </span>
 
                         </div>
+                    `
+                                  )
+                                  .join('')
+                            : `
+                        <div class="command">
 
-                        <span class="command-count">
-                            —
-                        </span>
+                            <span class="command-rank">
+                                —
+                            </span>
 
-                    </div>
+                            <div>
 
-                    <div class="command">
+                                <div class="command-name">
+                                    No command usage yet
+                                </div>
 
-                        <span class="command-rank">
-                            2.
-                        </span>
+                                <div class="command-bar">
+                                    <span style="width: 10%"></span>
+                                </div>
 
-                        <div>
-
-                            <div class="command-name">
-                                /userinfo
                             </div>
 
-                            <div class="command-bar">
-                                <span style="width: 75%"></span>
-                            </div>
+                            <span class="command-count">
+                                0
+                            </span>
 
                         </div>
-
-                        <span class="command-count">
-                            —
-                        </span>
-
-                    </div>
-
-                    <div class="command">
-
-                        <span class="command-rank">
-                            3.
-                        </span>
-
-                        <div>
-
-                            <div class="command-name">
-                                /serverinfo
-                            </div>
-
-                            <div class="command-bar">
-                                <span style="width: 58%"></span>
-                            </div>
-
-                        </div>
-
-                        <span class="command-count">
-                            —
-                        </span>
-
-                    </div>
-
-                    <div class="command">
-
-                        <span class="command-rank">
-                            4.
-                        </span>
-
-                        <div>
-
-                            <div class="command-name">
-                                /ping
-                            </div>
-
-                            <div class="command-bar">
-                                <span style="width: 44%"></span>
-                            </div>
-
-                        </div>
-
-                        <span class="command-count">
-                            —
-                        </span>
-
-                    </div>
+                    `
+                    }
 
                 </div>
 
@@ -1829,11 +1896,13 @@ router.get('/', (req, res) => {
                 </span>
 
                 <span class="footer-value">
+
                     ${
                         typeof ping === 'number'
                             ? `${ping}ms`
                             : '—'
                     }
+
                 </span>
 
             </div>
@@ -1843,7 +1912,9 @@ router.get('/', (req, res) => {
     </main>
 
     <script>
+
         function toggleProfile(event) {
+
             if (event) {
                 event.stopPropagation();
             }
@@ -1854,20 +1925,29 @@ router.get('/', (req, res) => {
             if (card) {
                 card.classList.toggle('open');
             }
+
         }
 
-        document.addEventListener('click', function (event) {
-            const card =
-                document.getElementById('profileCard');
+        document.addEventListener(
+            'click',
+            function (event) {
 
-            if (!card) {
-                return;
-            }
+                const card =
+                    document.getElementById(
+                        'profileCard'
+                    );
 
-            if (!card.contains(event.target)) {
-                card.classList.remove('open');
+                if (!card) {
+                    return;
+                }
+
+                if (!card.contains(event.target)) {
+                    card.classList.remove('open');
+                }
+
             }
-        });
+        );
+
     </script>
 
 </body>
@@ -1884,6 +1964,7 @@ router.get('/', (req, res) => {
 
     return res.send(`
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -2035,7 +2116,9 @@ router.get('/auth/discord', (req, res) => {
 router.get(
     '/auth/discord/callback',
     async (req, res) => {
+
         try {
+
             const { code } = req.query;
 
             if (!code) {
@@ -2057,6 +2140,7 @@ router.get(
                     },
 
                     body: new URLSearchParams({
+
                         client_id:
                             process.env.DISCORD_CLIENT_ID,
 
@@ -2070,6 +2154,7 @@ router.get(
 
                         redirect_uri:
                             process.env.DISCORD_REDIRECT_URI,
+
                     }),
                 }
             );
@@ -2078,6 +2163,7 @@ router.get(
                 await tokenResponse.json();
 
             if (!tokenResponse.ok) {
+
                 console.error(
                     'Discord OAuth token error:',
                     tokenData
@@ -2104,6 +2190,7 @@ router.get(
                 await userResponse.json();
 
             if (!userResponse.ok) {
+
                 console.error(
                     'Discord user error:',
                     user
@@ -2121,6 +2208,7 @@ router.get(
             return res.redirect('/dashboard');
 
         } catch (error) {
+
             console.error(
                 'Discord OAuth error:',
                 error
@@ -2132,6 +2220,7 @@ router.get(
                     'Something went wrong while logging in with Discord.'
                 );
         }
+
     }
 );
 
@@ -2142,9 +2231,11 @@ router.get(
 */
 
 router.get('/logout', (req, res) => {
+
     req.session.destroy(() => {
         res.redirect('/dashboard');
     });
+
 });
 
 export default router;
