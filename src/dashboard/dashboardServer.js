@@ -53,15 +53,15 @@ router.get('/', async (req, res) => {
     let commandUsageByDay = [];
 
     try {
-        if (bot?.db) {
-            const totalResult = await bot.db.query(`
+        if (bot?.db?.db?.pool) {
+            const totalResult = await bot.db.db.pool.query(`
                 SELECT COUNT(*)::int AS count
                 FROM command_usage
             `);
 
             commandUsageTotal = totalResult.rows[0]?.count ?? 0;
 
-            const topCommandsResult = await bot.db.query(`
+            const topCommandsResult = await bot.db.db.pool.query(`
                 SELECT
                     command_name,
                     COUNT(*)::int AS count
@@ -74,7 +74,7 @@ router.get('/', async (req, res) => {
 
             topCommands = topCommandsResult.rows;
 
-            const dailyResult = await bot.db.query(`
+            const dailyResult = await bot.db.db.pool.query(`
                 SELECT
                     DATE(used_at) AS day,
                     COUNT(*)::int AS count
