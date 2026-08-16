@@ -199,6 +199,12 @@ router.get('/', async (req, res) => {
                 0
             ) ?? 0;
 
+            const messageCount =
+    await bot.db.db.pool.query(
+        'SELECT COALESCE(SUM(message_count), 0) AS total FROM message_stats'
+    ).then(result => Number(result.rows[0]?.total ?? 0))
+     .catch(() => 0);
+
         /*
         |--------------------------------------------------------------------------
         | COMMAND CHART DATA
@@ -1574,11 +1580,11 @@ router.get('/', async (req, res) => {
                 </div>
 
                 <div class="stat-value">
-                    ${userCount.toLocaleString()}
+                    ${messageCount.toLocaleString()}
                 </div>
 
                 <div class="stat-change">
-                    Total members
+                    Total messages
                 </div>
 
             </div>
@@ -1598,11 +1604,11 @@ router.get('/', async (req, res) => {
                 </div>
 
                 <div class="stat-value">
-                    ${userCount.toLocaleString()}
+                    ${messageCount.toLocaleString()}
                 </div>
 
                 <div class="stat-change">
-                    Total members
+                    Total messages
                 </div>
 
             </div>

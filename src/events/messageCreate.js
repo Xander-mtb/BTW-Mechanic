@@ -1,5 +1,6 @@
 import { Events, ChannelType } from 'discord.js';
 import { logger } from '../utils/logger.js';
+import { pgDb } from '../utils/postgresDatabase.js';
 import { getLevelingConfig, getUserLevelData } from '../services/leveling/leveling.js';
 import { addXp } from '../services/leveling/xpSystem.js';
 import { checkRateLimit } from '../utils/rateLimiter.js';
@@ -77,15 +78,38 @@ export default {
       }
 
 
-      // ============================================================
-      // NORMAL SERVER MESSAGE HANDLING
-      // ============================================================
+     // ============================================================
+// NORMAL SERVER MESSAGE HANDLING
+// ============================================================
 
-      if (message.author.bot || !message.guild) return;
+if (message.author.bot || !message.guild) return;
 
-      logger.debug(
-        `Message received from ${message.author.tag}: ${message.content}`
-      );
+try {
+  await client.db.db.pool.query(
+    `
+    INSERT INTO message_stats (
+      guild_id,
+      message_count,
+      updated_at
+    )
+    VALUES ($1, 1, CURRENT_TIMESTAMP)
+    ON CONFLICT (guild_id)
+    DO UPDATE SET
+      message_count = message_stats.message_count + 1,
+      updated_at = CURRENT_TIMESTAMP
+    `,
+    [message.guild.id]
+  );
+} catch (error) {
+  logger.error(
+    'Error updating message statistics:',
+    error
+  );
+}
+
+logger.debug(
+  `Message received from ${message.author.tag}: ${message.content}`
+);
 
       const countingProcessed = await handleCountingGame(message, client);
 
