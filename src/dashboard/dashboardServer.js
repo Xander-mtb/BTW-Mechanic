@@ -2232,12 +2232,12 @@ router.get('/', async (req, res) => {
     }
 
     /*
-    |--------------------------------------------------------------------------
-    | NOT LOGGED IN
-    |--------------------------------------------------------------------------
-    */
+|--------------------------------------------------------------------------
+| NOT LOGGED IN - LANDING PAGE
+|--------------------------------------------------------------------------
+*/
 
-    return res.send(`
+return res.send(`
 <!DOCTYPE html>
 
 <html lang="en">
@@ -2251,7 +2251,12 @@ router.get('/', async (req, res) => {
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>BTW Mechanic</title>
+    <meta
+        name="description"
+        content="BTW Mechanic — Serving the Beyond Two Wheels Community, one crank at a time."
+    >
+
+    <title>BTW Mechanic | Beyond Two Wheels</title>
 
     <style>
 
@@ -2259,98 +2264,1128 @@ router.get('/', async (req, res) => {
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             margin: 0;
 
             min-height: 100vh;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
 
             font-family:
                 Arial,
                 Helvetica,
                 sans-serif;
 
-            color: white;
+            color: #ffffff;
 
             background:
                 radial-gradient(
-                    circle at top right,
-                    #24104f 0%,
-                    #090910 45%,
-                    #050509 100%
-                );
+                    circle at 85% 0%,
+                    rgba(91, 33, 182, 0.45) 0%,
+                    rgba(37, 16, 79, 0.25) 28%,
+                    transparent 55%
+                ),
+                #06060b;
+
+            overflow-x: hidden;
         }
 
-        .login-card {
-            width: 90%;
+        body::before {
+            content: "";
 
-            max-width: 500px;
+            position: fixed;
 
-            padding: 45px;
+            inset: 0;
+
+            pointer-events: none;
+
+            background:
+                radial-gradient(
+                    circle at 15% 35%,
+                    rgba(124, 58, 237, 0.06),
+                    transparent 30%
+                );
+
+            z-index: -1;
+        }
+
+        a {
+            color: inherit;
+
+            text-decoration: none;
+        }
+
+        /* =========================================================
+           NAVIGATION
+        ========================================================= */
+
+        .navbar {
+            position: fixed;
+
+            top: 0;
+            left: 0;
+            right: 0;
+
+            z-index: 100;
+
+            padding: 18px 6%;
+
+            background:
+                rgba(6, 6, 11, 0.72);
+
+            backdrop-filter: blur(18px);
+
+            border-bottom:
+                1px solid
+                rgba(139, 92, 246, 0.08);
+        }
+
+        .navbar-inner {
+            max-width: 1250px;
+
+            margin: 0 auto;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            font-size: 18px;
+
+            font-weight: 800;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+
+            border-radius: 10px;
+
+            object-fit: cover;
+
+            background: #11111a;
+
+            border:
+                1px solid
+                rgba(139, 92, 246, 0.35);
+
+            box-shadow:
+                0 0 20px
+                rgba(124, 58, 237, 0.18);
+        }
+
+        .brand-text span {
+            display: block;
+        }
+
+        .brand-subtitle {
+            margin-top: 2px;
+
+            color: #777083;
+
+            font-size: 7px;
+
+            letter-spacing: 1.5px;
+        }
+
+        .nav-links {
+            display: flex;
+
+            align-items: center;
+
+            gap: 28px;
+
+            color: #918b9f;
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+        .nav-links a {
+            transition: 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        .nav-login {
+            padding: 9px 15px;
+
+            border:
+                1px solid
+                rgba(139, 92, 246, 0.45);
+
+            border-radius: 7px;
+
+            color: #ffffff;
+
+            background:
+                rgba(124, 58, 237, 0.10);
+        }
+
+        .nav-login:hover {
+            background:
+                rgba(124, 58, 237, 0.20);
+        }
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+            position: relative;
+
+            min-height: 820px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding:
+                150px 24px
+                100px;
 
             text-align: center;
 
+            overflow: hidden;
+        }
+
+        .hero-glow {
+            position: absolute;
+
+            width: 700px;
+            height: 500px;
+
+            top: 80px;
+            right: -120px;
+
             background:
-                rgba(
-                    15,
-                    15,
-                    30,
-                    0.85
+                radial-gradient(
+                    circle,
+                    rgba(124, 58, 237, 0.25),
+                    transparent 68%
                 );
+
+            filter: blur(30px);
+
+            pointer-events: none;
+        }
+
+        .hero-glow-left {
+            position: absolute;
+
+            width: 450px;
+            height: 450px;
+
+            bottom: -200px;
+            left: -150px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(91, 33, 182, 0.14),
+                    transparent 70%
+                );
+
+            filter: blur(30px);
+
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+
+            z-index: 2;
+
+            max-width: 900px;
+
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 7px 12px;
+
+            margin-bottom: 24px;
 
             border:
-                1px solid #2a1748;
+                1px solid
+                rgba(139, 92, 246, 0.25);
 
-            border-radius: 16px;
+            border-radius: 999px;
+
+            color: #b7a5d8;
+
+            background:
+                rgba(124, 58, 237, 0.07);
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+        }
+
+        .hero-badge-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: #a855f7;
 
             box-shadow:
-                0 8px 35px
-                rgba(
-                    124,
-                    58,
-                    237,
-                    0.22
+                0 0 10px
+                rgba(168, 85, 247, 0.9);
+        }
+
+        .hero h1 {
+            margin: 0;
+
+            font-size:
+                clamp(
+                    48px,
+                    8vw,
+                    92px
                 );
+
+            line-height: 0.98;
+
+            letter-spacing: -4px;
+
+            font-weight: 900;
         }
 
-        .logo {
-            font-size: 60px;
+        .hero h1 .gradient {
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff 20%,
+                    #c084fc 60%,
+                    #7c3aed 100%
+                );
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            color: transparent;
         }
 
-        h1 {
-            margin-bottom: 10px;
+        .hero-description {
+            max-width: 650px;
+
+            margin: 28px auto 0;
+
+            color: #918b9f;
+
+            font-size: 16px;
+
+            line-height: 1.8;
         }
 
-        p {
-            color: #9ca3af;
+        .hero-slogan {
+            margin-top: 13px;
 
-            line-height: 1.6;
+            color: #b9a8d4;
+
+            font-size: 11px;
+
+            font-style: italic;
         }
 
-        .login {
-            display: inline-block;
+        .hero-actions {
+            display: flex;
 
-            margin-top: 20px;
+            justify-content: center;
 
-            padding: 14px 28px;
+            gap: 12px;
 
-            background: #5865F2;
+            margin-top: 35px;
+        }
 
-            color: white;
+        .button {
+            display: inline-flex;
 
-            text-decoration: none;
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 13px 21px;
 
             border-radius: 8px;
 
-            font-weight: bold;
+            font-size: 11px;
+
+            font-weight: 800;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
         }
 
-        .login:hover {
-            background: #4752c4;
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .button-primary {
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #6d28d9
+                );
+
+            border:
+                1px solid
+                #8b5cf6;
+
+            box-shadow:
+                0 0 30px
+                rgba(124, 58, 237, 0.25);
+        }
+
+        .button-primary:hover {
+            box-shadow:
+                0 0 38px
+                rgba(124, 58, 237, 0.45);
+        }
+
+        .button-secondary {
+            background:
+                rgba(255,255,255,0.025);
+
+            border:
+                1px solid
+                #29233a;
+
+            color: #d5d0df;
+        }
+
+        .button-secondary:hover {
+            background:
+                rgba(124, 58, 237, 0.08);
+
+            border-color:
+                rgba(139, 92, 246, 0.35);
+        }
+
+        /* =========================================================
+           HERO DASHBOARD PREVIEW
+        ========================================================= */
+
+        .preview-wrapper {
+            max-width: 1100px;
+
+            margin: 75px auto 0;
+
+            position: relative;
+        }
+
+        .preview-glow {
+            position: absolute;
+
+            inset: 15%;
+
+            background:
+                rgba(124, 58, 237, 0.18);
+
+            filter: blur(70px);
+
+            z-index: -1;
+        }
+
+        .dashboard-preview {
+            position: relative;
+
+            display: grid;
+
+            grid-template-columns:
+                155px 1fr;
+
+            min-height: 420px;
+
+            text-align: left;
+
+            background:
+                #0b0b13;
+
+            border:
+                1px solid
+                #27213a;
+
+            border-radius: 14px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 35px 90px
+                rgba(0,0,0,0.55),
+                0 0 50px
+                rgba(124,58,237,0.10);
+        }
+
+        .preview-sidebar {
+            padding: 18px 10px;
+
+            background:
+                #090910;
+
+            border-right:
+                1px solid
+                #211b30;
+        }
+
+        .preview-brand {
+            padding: 5px 8px 20px;
+
+            font-size: 10px;
+
+            font-weight: 800;
+        }
+
+        .preview-nav {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 5px;
+        }
+
+        .preview-nav-item {
+            padding: 8px;
+
+            color: #696376;
+
+            border-radius: 5px;
+
+            font-size: 8px;
+        }
+
+        .preview-nav-item.active {
+            color: #ffffff;
+
+            background:
+                rgba(124,58,237,0.18);
+
+            box-shadow:
+                inset 2px 0 #8b5cf6;
+        }
+
+        .preview-content {
+            padding: 25px;
+        }
+
+        .preview-top {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .preview-title {
+            font-size: 16px;
+
+            font-weight: 800;
+        }
+
+        .preview-status {
+            padding: 6px 9px;
+
+            border-radius: 5px;
+
+            color: #4ade80;
+
+            background:
+                rgba(34,197,94,0.07);
+
+            font-size: 7px;
+        }
+
+        .preview-stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 8px;
+        }
+
+        .preview-stat {
+            padding: 13px;
+
+            background:
+                #10101a;
+
+            border:
+                1px solid
+                #211b30;
+
+            border-radius: 7px;
+        }
+
+        .preview-stat-label {
+            color: #686274;
+
+            font-size: 7px;
+        }
+
+        .preview-stat-value {
+            margin-top: 6px;
+
+            font-size: 15px;
+
+            font-weight: 800;
+        }
+
+        .preview-panels {
+            display: grid;
+
+            grid-template-columns:
+                1.7fr 1fr;
+
+            gap: 8px;
+
+            margin-top: 8px;
+        }
+
+        .preview-panel {
+            min-height: 190px;
+
+            padding: 14px;
+
+            background:
+                #10101a;
+
+            border:
+                1px solid
+                #211b30;
+
+            border-radius: 7px;
+        }
+
+        .preview-panel-title {
+            color: #c9c3d4;
+
+            font-size: 8px;
+
+            font-weight: 700;
+        }
+
+        .fake-chart {
+            position: relative;
+
+            height: 130px;
+
+            margin-top: 15px;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    rgba(255,255,255,0.025) 1px,
+                    transparent 1px
+                );
+
+            background-size:
+                100% 32px;
+        }
+
+        .fake-chart svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .fake-line {
+            fill: none;
+
+            stroke: #8b5cf6;
+
+            stroke-width: 2;
+
+            filter:
+                drop-shadow(
+                    0 0 5px
+                    rgba(139,92,246,0.6)
+                );
+        }
+
+        .preview-list {
+            margin-top: 15px;
+        }
+
+        .preview-list-item {
+            display: flex;
+
+            justify-content: space-between;
+
+            padding: 9px 0;
+
+            border-bottom:
+                1px solid
+                #1d1927;
+
+            color: #797283;
+
+            font-size: 7px;
+        }
+
+        .preview-list-item strong {
+            color: #c8c1d4;
+        }
+
+        /* =========================================================
+           FEATURES
+        ========================================================= */
+
+        .section {
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+            padding:
+                100px 24px;
+        }
+
+        .section-heading {
+            max-width: 650px;
+
+            margin: 0 auto 50px;
+
+            text-align: center;
+        }
+
+        .section-kicker {
+            color: #a855f7;
+
+            font-size: 9px;
+
+            font-weight: 800;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+        }
+
+        .section-heading h2 {
+            margin: 12px 0 0;
+
+            font-size:
+                clamp(
+                    32px,
+                    5vw,
+                    48px
+                );
+
+            letter-spacing: -2px;
+        }
+
+        .section-heading p {
+            margin-top: 15px;
+
+            color: #7e778b;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+        .features-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 12px;
+        }
+
+        .feature-card {
+            position: relative;
+
+            padding: 25px;
+
+            min-height: 220px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(18,17,27,0.95),
+                    rgba(9,9,15,0.95)
+                );
+
+            border:
+                1px solid
+                #211a34;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .feature-card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 150px;
+            height: 150px;
+
+            top: -80px;
+            right: -70px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(124,58,237,0.16),
+                    transparent 70%
+                );
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+
+            border-color:
+                rgba(139,92,246,0.35);
+
+            box-shadow:
+                0 18px 45px
+                rgba(76,29,149,0.12);
+        }
+
+        .feature-icon {
+            width: 42px;
+            height: 42px;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 10px;
+
+            color: #c084fc;
+
+            background:
+                rgba(124,58,237,0.10);
+
+            border:
+                1px solid
+                rgba(139,92,246,0.18);
+
+            font-size: 18px;
+        }
+
+        .feature-card h3 {
+            margin:
+                22px 0 8px;
+
+            font-size: 15px;
+        }
+
+        .feature-card p {
+            margin: 0;
+
+            color: #777082;
+
+            font-size: 11px;
+
+            line-height: 1.7;
+        }
+
+        /* =========================================================
+           COMMUNITY
+        ========================================================= */
+
+        .community {
+            position: relative;
+
+            max-width: 1150px;
+
+            margin:
+                20px auto 100px;
+
+            padding:
+                70px 40px;
+
+            text-align: center;
+
+            border:
+                1px solid
+                #291f3d;
+
+            border-radius: 16px;
+
+            background:
+                radial-gradient(
+                    circle at 50% 0%,
+                    rgba(124,58,237,0.13),
+                    transparent 65%
+                ),
+                #0b0a12;
+
+            overflow: hidden;
+        }
+
+        .community h2 {
+            margin: 0;
+
+            font-size:
+                clamp(
+                    30px,
+                    5vw,
+                    46px
+                );
+
+            letter-spacing: -2px;
+        }
+
+        .community p {
+            max-width: 620px;
+
+            margin:
+                16px auto 0;
+
+            color: #827b8d;
+
+            font-size: 13px;
+
+            line-height: 1.8;
+        }
+
+        .community-slogan {
+            margin-top: 18px;
+
+            color: #c084fc;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+        .community-actions {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-top: 28px;
+        }
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        footer {
+            border-top:
+                1px solid
+                #171420;
+
+            background:
+                #050509;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+            padding:
+                45px 24px 25px;
+        }
+
+        .footer-top {
+            display: grid;
+
+            grid-template-columns:
+                1.5fr 1fr 1fr 1fr;
+
+            gap: 35px;
+        }
+
+        .footer-brand p {
+            max-width: 300px;
+
+            color: #686171;
+
+            font-size: 10px;
+
+            line-height: 1.7;
+        }
+
+        .footer-column h4 {
+            margin:
+                0 0 13px;
+
+            color: #aaa3b3;
+
+            font-size: 9px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+        }
+
+        .footer-column a {
+            display: block;
+
+            margin-bottom: 9px;
+
+            color: #66606e;
+
+            font-size: 9px;
+
+            transition: 0.2s ease;
+        }
+
+        .footer-column a:hover {
+            color: #ffffff;
+        }
+
+        .footer-bottom {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            margin-top: 40px;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid
+                #15121d;
+
+            color: #514c59;
+
+            font-size: 8px;
+        }
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 900px) {
+
+            .nav-links a:not(.nav-login) {
+                display: none;
+            }
+
+            .dashboard-preview {
+                grid-template-columns: 110px 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .footer-top {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 650px) {
+
+            .navbar {
+                padding:
+                    15px 18px;
+            }
+
+            .hero {
+                min-height: 720px;
+
+                padding:
+                    130px 18px 70px;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+
+            .hero-description {
+                font-size: 13px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+
+                max-width: 280px;
+
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .preview-wrapper {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding:
+                    75px 18px;
+            }
+
+            .community {
+                margin:
+                    10px 18px 70px;
+
+                padding:
+                    50px 22px;
+            }
+
+            .community-actions {
+                flex-direction: column;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
         }
 
     </style>
@@ -2359,34 +3394,694 @@ router.get('/', async (req, res) => {
 
 <body>
 
-    <div class="login-card">
+    <!-- =========================================================
+         NAVIGATION
+    ========================================================= -->
 
-        <div class="logo">
-            ⚙️
+    <nav class="navbar">
+
+        <div class="navbar-inner">
+
+            <a
+                href="/dashboard"
+                class="brand"
+            >
+
+                <img
+                    class="brand-logo"
+                    src="http://cdn.discordapp.com/attachments/1536434813735796906/1538561375314386954/e90d09_fb59c3740e8240f0b52f3935d2ab346emv2_1.png"
+                    alt="BTW Mechanic"
+                >
+
+                <div class="brand-text">
+
+                    <span>
+                        BTW Mechanic
+                    </span>
+
+                    <span class="brand-subtitle">
+                        BEYOND TWO WHEELS
+                    </span>
+
+                </div>
+
+            </a>
+
+            <div class="nav-links">
+
+                <a href="#features">
+                    Features
+                </a>
+
+                <a href="#dashboard">
+                    Dashboard
+                </a>
+
+                <a href="#community">
+                    Community
+                </a>
+
+                <a
+                    href="/dashboard/auth/discord"
+                    class="nav-login"
+                >
+                    Dashboard
+                </a>
+
+            </div>
+
         </div>
 
-        <h1>
-            BTW Mechanic
-        </h1>
+    </nav>
+
+
+    <!-- =========================================================
+         HERO
+    ========================================================= -->
+
+    <section class="hero">
+
+        <div class="hero-glow"></div>
+
+        <div class="hero-glow-left"></div>
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+
+                <span class="hero-badge-dot"></span>
+
+                Built for Beyond Two Wheels
+
+            </div>
+
+            <h1>
+
+                Your community.
+
+                <br>
+
+                <span class="gradient">
+                    Powered by BTW Mechanic.
+                </span>
+
+            </h1>
+
+            <p class="hero-description">
+
+                A powerful Discord bot built specifically
+                for the Beyond Two Wheels community —
+                bringing moderation, support, ranks,
+                events and server utilities together
+                in one place.
+
+            </p>
+
+            <div class="hero-slogan">
+
+                Serving the Beyond Two Wheels Community,
+                one crank at a time.
+
+            </div>
+
+            <div class="hero-actions">
+
+                <a
+                    href="https://discord.com/oauth2/authorize?client_id=1535038083957919765&permissions=8&integration_type=0&scope=bot"
+                    class="button button-primary"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    ⚙ Add to Discord
+                </a>
+
+                <a
+                    href="https://discord.gg/wUGdq9fqDX"
+                    class="button button-secondary"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    🏍 Join Beyond Two Wheels
+                </a>
+
+            </div>
+
+
+            <!-- DASHBOARD PREVIEW -->
+
+            <div
+                class="preview-wrapper"
+                id="dashboard"
+            >
+
+                <div class="preview-glow"></div>
+
+                <div class="dashboard-preview">
+
+                    <div class="preview-sidebar">
+
+                        <div class="preview-brand">
+                            ⚙ BTW Mechanic
+                        </div>
+
+                        <div class="preview-nav">
+
+                            <div class="preview-nav-item active">
+                                ⌂ Dashboard
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ♙ Servers
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ♙ Users
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ⌘ Commands
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ◈ Moderation
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ▱ Tickets
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ♢ Giveaways
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ♫ Music
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ⚙ Settings
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="preview-content">
+
+                        <div class="preview-top">
+
+                            <div class="preview-title">
+                                Dashboard
+                            </div>
+
+                            <div class="preview-status">
+                                ● BOT ONLINE
+                            </div>
+
+                        </div>
+
+                        <div class="preview-stats">
+
+                            <div class="preview-stat">
+
+                                <div class="preview-stat-label">
+                                    Servers
+                                </div>
+
+                                <div class="preview-stat-value">
+                                    1
+                                </div>
+
+                            </div>
+
+                            <div class="preview-stat">
+
+                                <div class="preview-stat-label">
+                                    Users
+                                </div>
+
+                                <div class="preview-stat-value">
+                                    1,284
+                                </div>
+
+                            </div>
+
+                            <div class="preview-stat">
+
+                                <div class="preview-stat-label">
+                                    Messages
+                                </div>
+
+                                <div class="preview-stat-value">
+                                    24.8K
+                                </div>
+
+                            </div>
+
+                            <div class="preview-stat">
+
+                                <div class="preview-stat-label">
+                                    Commands
+                                </div>
+
+                                <div class="preview-stat-value">
+                                    8.4K
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="preview-panels">
+
+                            <div class="preview-panel">
+
+                                <div class="preview-panel-title">
+                                    Command Usage
+                                </div>
+
+                                <div class="fake-chart">
+
+                                    <svg
+                                        viewBox="0 0 600 130"
+                                        preserveAspectRatio="none"
+                                    >
+
+                                        <path
+                                            class="fake-line"
+                                            d="
+                                                M0 110
+                                                L50 100
+                                                L100 106
+                                                L150 72
+                                                L200 86
+                                                L250 60
+                                                L300 70
+                                                L350 35
+                                                L400 55
+                                                L450 45
+                                                L500 20
+                                                L550 35
+                                                L600 10
+                                            "
+                                        />
+
+                                    </svg>
+
+                                </div>
+
+                            </div>
+
+                            <div class="preview-panel">
+
+                                <div class="preview-panel-title">
+                                    Top Commands
+                                </div>
+
+                                <div class="preview-list">
+
+                                    <div class="preview-list-item">
+                                        <strong>/help</strong>
+                                        1,248
+                                    </div>
+
+                                    <div class="preview-list-item">
+                                        <strong>/warn</strong>
+                                        634
+                                    </div>
+
+                                    <div class="preview-list-item">
+                                        <strong>/ticket</strong>
+                                        421
+                                    </div>
+
+                                    <div class="preview-list-item">
+                                        <strong>/rank</strong>
+                                        318
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         FEATURES
+    ========================================================= -->
+
+    <section
+        class="section"
+        id="features"
+    >
+
+        <div class="section-heading">
+
+            <div class="section-kicker">
+                Everything you need
+            </div>
+
+            <h2>
+                Built around your community.
+            </h2>
+
+            <p>
+                BTW Mechanic brings the tools that keep
+                Beyond Two Wheels running together in one
+                powerful Discord bot.
+            </p>
+
+        </div>
+
+        <div class="features-grid">
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🛠️
+                </div>
+
+                <h3>
+                    Moderation
+                </h3>
+
+                <p>
+                    Keep your community clean, safe and
+                    well-managed with powerful moderation
+                    tools built directly into Discord.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🎫
+                </div>
+
+                <h3>
+                    Modmail & Support
+                </h3>
+
+                <p>
+                    Give members a private and simple way
+                    to contact your moderation team whenever
+                    they need help.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    📊
+                </div>
+
+                <h3>
+                    Ranks & XP
+                </h3>
+
+                <p>
+                    Reward active members with XP, ranks
+                    and progression that encourage people
+                    to stay involved.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🎉
+                </div>
+
+                <h3>
+                    Events & Community
+                </h3>
+
+                <p>
+                    Make community events, announcements
+                    and engagement easier to organise and
+                    manage.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🤖
+                </div>
+
+                <h3>
+                    Server Utilities
+                </h3>
+
+                <p>
+                    Automation, logging, member management
+                    and useful utilities designed to keep
+                    your server running smoothly.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    📈
+                </div>
+
+                <h3>
+                    Web Dashboard
+                </h3>
+
+                <p>
+                    See your bot's activity, command usage,
+                    server statistics and system status from
+                    one central dashboard.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         COMMUNITY CTA
+    ========================================================= -->
+
+    <section
+        class="community"
+        id="community"
+    >
+
+        <div class="section-kicker">
+            Beyond Two Wheels Collective
+        </div>
+
+        <h2>
+            Driven by passion.
+            <br>
+            Connected by wheels.
+        </h2>
 
         <p>
-            Manage your Discord bot from one simple dashboard.
+            BTW Mechanic is built to serve the community
+            behind Beyond Two Wheels — giving members and
+            staff the tools they need to keep the server
+            active, organised and connected.
         </p>
 
-        <a
-            class="login"
-            href="/dashboard/auth/discord"
-        >
-            Login with Discord
-        </a>
+        <div class="community-slogan">
+            Serving the Beyond Two Wheels Community,
+            one crank at a time.
+        </div>
 
-    </div>
+        <div class="community-actions">
+
+            <a
+                href="https://discord.gg/wUGdq9fqDX"
+                class="button button-primary"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                🏍 Join the Community
+            </a>
+
+            <a
+                href="https://discord.gg/wtrjtFBmag"
+                class="button button-secondary"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                🎫 Visit Support
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================= -->
+
+    <footer>
+
+        <div class="footer-inner">
+
+            <div class="footer-top">
+
+                <div class="footer-brand">
+
+                    <a
+                        href="/dashboard"
+                        class="brand"
+                    >
+
+                        <img
+                            class="brand-logo"
+                            src="http://cdn.discordapp.com/attachments/1536434813735796906/1538561375314386954/e90d09_fb59c3740e8240f0b52f3935d2ab346emv2_1.png"
+                            alt="BTW Mechanic"
+                        >
+
+                        <div class="brand-text">
+
+                            <span>
+                                BTW Mechanic
+                            </span>
+
+                            <span class="brand-subtitle">
+                                BEYOND TWO WHEELS
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                    <p>
+                        Serving the Beyond Two Wheels Community,
+                        one crank at a time.
+                    </p>
+
+                </div>
+
+
+                <div class="footer-column">
+
+                    <h4>
+                        Navigate
+                    </h4>
+
+                    <a href="#features">
+                        Features
+                    </a>
+
+                    <a href="#dashboard">
+                        Dashboard
+                    </a>
+
+                    <a
+                        href="/dashboard/auth/discord"
+                    >
+                        Login
+                    </a>
+
+                </div>
+
+
+                <div class="footer-column">
+
+                    <h4>
+                        Community
+                    </h4>
+
+                    <a
+                        href="https://discord.gg/wUGdq9fqDX"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Beyond Two Wheels
+                    </a>
+
+                    <a
+                        href="https://discord.gg/wtrjtFBmag"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Support Server
+                    </a>
+
+                    <a
+                        href="https://discord.com/oauth2/authorize?client_id=1535038083957919765&permissions=8&integration_type=0&scope=bot"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Add to Discord
+                    </a>
+
+                </div>
+
+
+                <div class="footer-column">
+
+                    <h4>
+                        Legal
+                    </h4>
+
+                    <a href="/privacy">
+                        Privacy Policy
+                    </a>
+
+                    <a href="/terms">
+                        Terms of Use
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="footer-bottom">
+
+                <span>
+                    © 2026 Beyond Two Wheels Collective.
+                    All rights reserved.
+                </span>
+
+                <span>
+                    BTW Mechanic
+                </span>
+
+            </div>
+
+        </div>
+
+    </footer>
 
 </body>
 
 </html>
-    `);
-});
+`);
 
 /*
 |--------------------------------------------------------------------------
