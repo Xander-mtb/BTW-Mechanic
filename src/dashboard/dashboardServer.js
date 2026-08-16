@@ -1580,11 +1580,11 @@ router.get('/', async (req, res) => {
                 </div>
 
                 <div class="stat-value">
-                    ${messageCount.toLocaleString()}
+                    ${userCount.toLocaleString()}
                 </div>
 
                 <div class="stat-change">
-                    Total messages
+                    Total Users
                 </div>
 
             </div>
