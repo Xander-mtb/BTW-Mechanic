@@ -3482,7 +3482,8 @@ return res.send(`
                 <br>
 
                 <span class="gradient">
-                    Powered by BTW Mechanic.
+                    Powered by 
+                    BTW Mechanic.
                 </span>
 
             </h1>
