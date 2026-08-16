@@ -2199,6 +2199,10 @@ router.get('/', async (req, res) => {
 
         }
 
+        setInterval(() => {
+    window.location.reload();
+}, 10000);
+
         document.addEventListener(
             'click',
             function (event) {
