@@ -3471,7 +3471,7 @@ return res.send(`
 
                 <span class="hero-badge-dot"></span>
 
-                Built for Beyond Two Wheels
+                Built by the BTW community - For the community
 
             </div>
 
