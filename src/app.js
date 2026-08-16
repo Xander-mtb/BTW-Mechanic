@@ -138,10 +138,15 @@ class BtwBot extends Client {
 
     app.set('trust proxy', 1);
     app.locals.bot = this;
+
+app.use(
+    '/dashboard/assets',
+    express.static('src/dashboard/assets')
+);
     
-    app.get('/', (req, res) => {
-        res.redirect('/dashboard');
-    });
+app.get('/', (req, res) => {
+    res.redirect('/dashboard');
+});
 
     app.use('/dashboard', dashboardRouter);
 
