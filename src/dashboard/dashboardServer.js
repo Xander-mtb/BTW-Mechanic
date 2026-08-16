@@ -4234,175 +4234,136 @@ return res.send(`
 
             </div>
 
-
-            <!-- PRODUCT PREVIEW -->
+            <!-- COMMUNITY + BOT PREVIEW -->
 
             <div class="hero-visual">
 
-                <div class="visual-window">
+                <div class="community-preview">
 
-                    <aside class="visual-sidebar">
+                    <div class="discord-widget">
 
-                        <div class="visual-server">
+                        <iframe
+                            src="https://discord.com/widget?id=1534313294138052818&theme=dark"
+                            width="350"
+                            height="500"
+                            allowtransparency="true"
+                            frameborder="0"
+                            sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+                        ></iframe>
 
-                            <img
-                                src="/dashboard/assets/btw-mechanic-logo.png"
-                                alt=""
-                            >
+                    </div>
 
-                            Beyond Two Wheels
 
+                    <div class="mechanic-preview">
+
+                        <div class="mechanic-preview-badge">
+                            <span></span>
+                            BTW MECHANIC
                         </div>
 
-                        <div class="visual-menu">
-
-                            <span class="active">
-                                Overview
+                        <h3>
+                            Your server's
+                            <br>
+                            <span class="purple">
+                                digital mechanic.
                             </span>
+                        </h3>
 
-                            <span>
-                                Moderation
-                            </span>
-
-                            <span>
-                                Support
-                            </span>
-
-                            <span>
-                                Ranks & XP
-                            </span>
-
-                            <span>
-                                Events
-                            </span>
-
-                            <span>
-                                Logging
-                            </span>
-
-                        </div>
-
-                    </aside>
+                        <p>
+                            Built to handle the repetitive
+                            work behind your Discord community,
+                            so your staff can focus on what
+                            actually matters.
+                        </p>
 
 
-                    <div class="visual-content">
+                        <div class="mechanic-preview-features">
 
-                        <div class="visual-header">
+                            <div class="mechanic-preview-feature">
 
-                            <div class="visual-title">
-                                BTW Mechanic
-                            </div>
-
-                            <div class="visual-status">
-                                ● ONLINE
-                            </div>
-
-                        </div>
-
-
-                        <div class="visual-cards">
-
-                            <div class="visual-card">
-
-                                <div class="visual-card-icon">
+                                <div class="mechanic-feature-icon">
                                     🛡️
                                 </div>
 
-                                <strong>
-                                    Moderation
-                                </strong>
+                                <div>
+                                    <strong>
+                                        Moderation
+                                    </strong>
 
-                                <span>
-                                    Keep your community
-                                    safe and organised.
-                                </span>
+                                    <span>
+                                        Keep things organised.
+                                    </span>
+                                </div>
 
                             </div>
 
-                            <div class="visual-card">
 
-                                <div class="visual-card-icon">
+                            <div class="mechanic-preview-feature">
+
+                                <div class="mechanic-feature-icon">
                                     🎫
                                 </div>
 
-                                <strong>
-                                    Support
-                                </strong>
+                                <div>
+                                    <strong>
+                                        Support
+                                    </strong>
 
-                                <span>
-                                    Give members a direct
-                                    way to get help.
-                                </span>
+                                    <span>
+                                        Help members when they need it.
+                                    </span>
+                                </div>
 
                             </div>
 
-                            <div class="visual-card">
 
-                                <div class="visual-card-icon">
+                            <div class="mechanic-preview-feature">
+
+                                <div class="mechanic-feature-icon">
                                     📊
                                 </div>
 
-                                <strong>
-                                    Ranks & XP
-                                </strong>
+                                <div>
+                                    <strong>
+                                        Ranks & XP
+                                    </strong>
 
-                                <span>
-                                    Reward activity and
-                                    community engagement.
-                                </span>
-
-                            </div>
-
-                            <div class="visual-card">
-
-                                <div class="visual-card-icon">
-                                    🎉
+                                    <span>
+                                        Reward your community.
+                                    </span>
                                 </div>
 
-                                <strong>
-                                    Events
-                                </strong>
-
-                                <span>
-                                    Run giveaways and
-                                    community events.
-                                </span>
-
                             </div>
 
-                            <div class="visual-card">
 
-                                <div class="visual-card-icon">
+                            <div class="mechanic-preview-feature">
+
+                                <div class="mechanic-feature-icon">
                                     ⚙️
                                 </div>
 
-                                <strong>
-                                    Utilities
-                                </strong>
+                                <div>
+                                    <strong>
+                                        Automation
+                                    </strong>
 
-                                <span>
-                                    Automation and useful
-                                    server management tools.
-                                </span>
-
-                            </div>
-
-                            <div class="visual-card">
-
-                                <div class="visual-card-icon">
-                                    📋
+                                    <span>
+                                        Let the bot handle the busywork.
+                                    </span>
                                 </div>
 
-                                <strong>
-                                    Logging
-                                </strong>
-
-                                <span>
-                                    Keep track of important
-                                    server activity.
-                                </span>
-
                             </div>
+
+                        </div>
+
+
+                        <div class="mechanic-preview-status">
+
+                            <span class="status-dot"></span>
+
+                            <span>
+                                BTW Mechanic is online
+                            </span>
 
                         </div>
 
