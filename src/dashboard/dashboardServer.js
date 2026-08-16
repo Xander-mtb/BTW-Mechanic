@@ -2253,24 +2253,15 @@ return res.send(`
 
     <meta
         name="description"
-        content="BTW Mechanic — powerful Discord tools built for the Beyond Two Wheels community."
+        content="BTW Mechanic — Serving the Beyond Two Wheels Community, one crank at a time."
     >
 
-    <meta
-        name="theme-color"
-        content="#06060b"
-    >
-
-    <title>
-        BTW Mechanic | Beyond Two Wheels
-    </title>
+    <title>BTW Mechanic | Beyond Two Wheels</title>
 
     <style>
 
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
 
         html {
@@ -2278,12 +2269,11 @@ return res.send(`
         }
 
         body {
+            margin: 0;
+
             min-height: 100vh;
 
-            overflow-x: hidden;
-
             font-family:
-                Inter,
                 Arial,
                 Helvetica,
                 sans-serif;
@@ -2298,6 +2288,8 @@ return res.send(`
                     transparent 55%
                 ),
                 #06060b;
+
+            overflow-x: hidden;
         }
 
         body::before {
@@ -2311,9 +2303,9 @@ return res.send(`
 
             background:
                 radial-gradient(
-                    circle at 15% 40%,
-                    rgba(124, 58, 237, 0.07),
-                    transparent 32%
+                    circle at 15% 35%,
+                    rgba(124, 58, 237, 0.06),
+                    transparent 30%
                 );
 
             z-index: -1;
@@ -2325,98 +2317,86 @@ return res.send(`
             text-decoration: none;
         }
 
-        button {
-            font: inherit;
-        }
+        /* =========================================================
+           NAVIGATION
+        ========================================================= */
 
-        /* -------------------------------------------------
-           NAVBAR
-        ------------------------------------------------- */
-
-        .site-nav {
+        .navbar {
             position: fixed;
 
             top: 0;
             left: 0;
             right: 0;
 
-            height: 76px;
+            z-index: 100;
+
+            padding: 18px 6%;
+
+            background:
+                rgba(6, 6, 11, 0.72);
+
+            backdrop-filter: blur(18px);
+
+            border-bottom:
+                1px solid
+                rgba(139, 92, 246, 0.08);
+        }
+
+        .navbar-inner {
+            max-width: 1250px;
+
+            margin: 0 auto;
 
             display: flex;
 
             align-items: center;
 
             justify-content: space-between;
-
-            padding: 0 5%;
-
-            background:
-                rgba(
-                    6,
-                    6,
-                    11,
-                    0.72
-                );
-
-            border-bottom:
-                1px solid
-                rgba(
-                    139,
-                    92,
-                    246,
-                    0.10
-                );
-
-            backdrop-filter: blur(18px);
-
-            -webkit-backdrop-filter: blur(18px);
-
-            z-index: 1000;
         }
 
-        .nav-brand {
+        .brand {
             display: flex;
 
             align-items: center;
 
             gap: 11px;
 
-            font-weight: 800;
+            font-size: 18px;
 
-            white-space: nowrap;
+            font-weight: 800;
         }
 
-        .nav-logo {
-            width: 39px;
-            height: 39px;
-
-            object-fit: contain;
+        .brand-logo {
+            width: 40px;
+            height: 40px;
 
             border-radius: 10px;
+
+            object-fit: cover;
+
+            background: #11111a;
+
+            border:
+                1px solid
+                rgba(139, 92, 246, 0.35);
+
+            box-shadow:
+                0 0 20px
+                rgba(124, 58, 237, 0.18);
         }
 
-        .nav-brand-text {
-            display: flex;
-
-            flex-direction: column;
-
-            gap: 2px;
+        .brand-text span {
+            display: block;
         }
 
-        .nav-brand-name {
-            font-size: 15px;
+        .brand-subtitle {
+            margin-top: 2px;
 
-            letter-spacing: -0.3px;
-        }
-
-        .nav-brand-subtitle {
-            color: #81758f;
+            color: #777083;
 
             font-size: 7px;
 
-            font-weight: 800;
-
-            letter-spacing: 1.4px;
+            letter-spacing: 1.5px;
         }
 
         .nav-links {
@@ -2424,92 +2404,51 @@ return res.send(`
 
             align-items: center;
 
-            gap: 29px;
+            gap: 28px;
 
-            margin-left: auto;
+            color: #918b9f;
 
-            margin-right: 28px;
+            font-size: 12px;
+
+            font-weight: 600;
         }
 
         .nav-links a {
-            color: #aaa3b7;
-
-            font-size: 11px;
-
-            font-weight: 600;
-
-            transition:
-                color .2s ease;
+            transition: 0.2s ease;
         }
 
         .nav-links a:hover {
             color: #ffffff;
         }
 
-        .nav-button {
-            display: inline-flex;
+        .nav-login {
+            padding: 9px 15px;
 
-            align-items: center;
+            border:
+                1px solid
+                rgba(139, 92, 246, 0.45);
 
-            justify-content: center;
-
-            padding: 10px 17px;
+            border-radius: 7px;
 
             color: #ffffff;
 
             background:
-                linear-gradient(
-                    135deg,
-                    #7c3aed,
-                    #6d28d9
-                );
-
-            border:
-                1px solid
-                #8b5cf6;
-
-            border-radius: 8px;
-
-            font-size: 10px;
-
-            font-weight: 800;
-
-            box-shadow:
-                0 0 20px
-                rgba(
-                    124,
-                    58,
-                    237,
-                    0.25
-                );
-
-            transition:
-                transform .2s ease,
-                box-shadow .2s ease;
+                rgba(124, 58, 237, 0.10);
         }
 
-        .nav-button:hover {
-            transform:
-                translateY(-2px);
-
-            box-shadow:
-                0 0 30px
-                rgba(
-                    124,
-                    58,
-                    237,
-                    0.45
-                );
+        .nav-login:hover {
+            background:
+                rgba(124, 58, 237, 0.20);
         }
 
-        /* -------------------------------------------------
+        /* =========================================================
            HERO
-        ------------------------------------------------- */
+        ========================================================= */
 
         .hero {
             position: relative;
 
-            min-height: 850px;
+            min-height: 820px;
 
             display: flex;
 
@@ -2518,7 +2457,7 @@ return res.send(`
             justify-content: center;
 
             padding:
-                145px 6%
+                150px 24px
                 100px;
 
             text-align: center;
@@ -2526,33 +2465,44 @@ return res.send(`
             overflow: hidden;
         }
 
-        .hero::before {
-            content: "";
-
+        .hero-glow {
             position: absolute;
 
-            width: 800px;
+            width: 700px;
             height: 500px;
 
             top: 80px;
-            left: 50%;
-
-            transform:
-                translateX(-50%);
+            right: -120px;
 
             background:
                 radial-gradient(
-                    ellipse,
-                    rgba(
-                        124,
-                        58,
-                        237,
-                        0.20
-                    ),
+                    circle,
+                    rgba(124, 58, 237, 0.25),
                     transparent 68%
                 );
 
-            filter: blur(20px);
+            filter: blur(30px);
+
+            pointer-events: none;
+        }
+
+        .hero-glow-left {
+            position: absolute;
+
+            width: 450px;
+            height: 450px;
+
+            bottom: -200px;
+            left: -150px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(91, 33, 182, 0.14),
+                    transparent 70%
+                );
+
+            filter: blur(30px);
 
             pointer-events: none;
         }
@@ -2560,9 +2510,11 @@ return res.send(`
         .hero-content {
             position: relative;
 
-            max-width: 950px;
-
             z-index: 2;
+
+            max-width: 900px;
+
+            margin: 0 auto;
         }
 
         .hero-badge {
@@ -2572,37 +2524,28 @@ return res.send(`
 
             gap: 8px;
 
-            padding:
-                7px 12px;
+            padding: 7px 12px;
 
-            margin-bottom: 25px;
-
-            color: #c4b5fd;
-
-            background:
-                rgba(
-                    124,
-                    58,
-                    237,
-                    0.08
-                );
+            margin-bottom: 24px;
 
             border:
                 1px solid
-                rgba(
-                    139,
-                    92,
-                    246,
-                    0.25
-                );
+                rgba(139, 92, 246, 0.25);
 
             border-radius: 999px;
 
+            color: #b7a5d8;
+
+            background:
+                rgba(124, 58, 237, 0.07);
+
             font-size: 9px;
 
-            font-weight: 800;
+            font-weight: 700;
 
-            letter-spacing: .6px;
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
         }
 
         .hero-badge-dot {
@@ -2615,60 +2558,62 @@ return res.send(`
 
             box-shadow:
                 0 0 10px
-                rgba(
-                    168,
-                    85,
-                    247,
-                    .9
-                );
+                rgba(168, 85, 247, 0.9);
         }
 
         .hero h1 {
-            max-width: 900px;
-
-            margin:
-                0 auto
-                22px;
+            margin: 0;
 
             font-size:
                 clamp(
                     48px,
-                    7vw,
-                    88px
+                    8vw,
+                    92px
                 );
 
-            line-height: .98;
+            line-height: 0.98;
 
-            letter-spacing:
-                -4px;
+            letter-spacing: -4px;
 
             font-weight: 900;
         }
 
-        .hero h1 .purple {
-            color: #a855f7;
-
-            text-shadow:
-                0 0 35px
-                rgba(
-                    168,
-                    85,
-                    247,
-                    .25
+        .hero h1 .gradient {
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff 20%,
+                    #c084fc 60%,
+                    #7c3aed 100%
                 );
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            color: transparent;
         }
 
         .hero-description {
             max-width: 650px;
 
-            margin:
-                0 auto;
+            margin: 28px auto 0;
 
-            color: #aaa5b6;
+            color: #918b9f;
 
             font-size: 16px;
 
-            line-height: 1.75;
+            line-height: 1.8;
+        }
+
+        .hero-slogan {
+            margin-top: 13px;
+
+            color: #b9a8d4;
+
+            font-size: 11px;
+
+            font-style: italic;
         }
 
         .hero-actions {
@@ -2678,217 +2623,151 @@ return res.send(`
 
             gap: 12px;
 
-            margin-top: 34px;
+            margin-top: 35px;
         }
 
-        .primary-button,
-        .secondary-button {
+        .button {
             display: inline-flex;
 
             align-items: center;
 
             justify-content: center;
 
-            min-width: 155px;
+            padding: 13px 21px;
 
-            padding:
-                13px 20px;
-
-            border-radius: 9px;
+            border-radius: 8px;
 
             font-size: 11px;
 
             font-weight: 800;
 
             transition:
-                transform .2s ease,
-                box-shadow .2s ease,
-                background .2s ease;
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
         }
 
-        .primary-button {
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .button-primary {
             background:
                 linear-gradient(
                     135deg,
-                    #8b5cf6,
+                    #7c3aed,
                     #6d28d9
                 );
 
             border:
                 1px solid
-                #a78bfa;
+                #8b5cf6;
 
             box-shadow:
-                0 0 28px
-                rgba(
-                    124,
-                    58,
-                    237,
-                    .28
-                );
+                0 0 30px
+                rgba(124, 58, 237, 0.25);
         }
 
-        .primary-button:hover {
-            transform:
-                translateY(-2px);
-
+        .button-primary:hover {
             box-shadow:
-                0 0 40px
-                rgba(
-                    124,
-                    58,
-                    237,
-                    .48
-                );
+                0 0 38px
+                rgba(124, 58, 237, 0.45);
         }
 
-        .secondary-button {
+        .button-secondary {
             background:
-                rgba(
-                    255,
-                    255,
-                    255,
-                    .025
-                );
+                rgba(255,255,255,0.025);
 
             border:
                 1px solid
-                #30263f;
+                #29233a;
 
-            color: #d0cbd8;
+            color: #d5d0df;
         }
 
-        .secondary-button:hover {
-            transform:
-                translateY(-2px);
-
+        .button-secondary:hover {
             background:
-                rgba(
-                    124,
-                    58,
-                    237,
-                    .08
-                );
+                rgba(124, 58, 237, 0.08);
 
             border-color:
-                #6d28d9;
+                rgba(139, 92, 246, 0.35);
         }
 
-        /* -------------------------------------------------
-           PRODUCT VISUAL
-        ------------------------------------------------- */
+        /* =========================================================
+           HERO DASHBOARD PREVIEW
+        ========================================================= */
 
-        .hero-visual {
+        .preview-wrapper {
+            max-width: 1100px;
+
+            margin: 75px auto 0;
+
             position: relative;
+        }
 
-            width: min(
-                900px,
-                92vw
-            );
+        .preview-glow {
+            position: absolute;
 
-            margin:
-                75px auto
-                0;
-
-            padding: 9px;
+            inset: 15%;
 
             background:
-                linear-gradient(
-                    135deg,
-                    rgba(
-                        139,
-                        92,
-                        246,
-                        .30
-                    ),
-                    rgba(
-                        37,
-                        16,
-                        79,
-                        .15
-                    )
-                );
+                rgba(124, 58, 237, 0.18);
 
-            border:
-                1px solid
-                rgba(
-                    139,
-                    92,
-                    246,
-                    .28
-                );
+            filter: blur(70px);
 
-            border-radius: 18px;
-
-            box-shadow:
-                0 30px 100px
-                rgba(
-                    0,
-                    0,
-                    0,
-                    .45
-                ),
-                0 0 80px
-                rgba(
-                    124,
-                    58,
-                    237,
-                    .10
-                );
+            z-index: -1;
         }
 
-        .visual-window {
-            min-height: 300px;
+        .dashboard-preview {
+            position: relative;
 
             display: grid;
 
             grid-template-columns:
-                190px
-                1fr;
+                155px 1fr;
+
+            min-height: 420px;
 
             text-align: left;
 
+            background:
+                #0b0b13;
+
+            border:
+                1px solid
+                #27213a;
+
+            border-radius: 14px;
+
             overflow: hidden;
 
-            background:
-                #0c0b12;
-
-            border-radius: 11px;
+            box-shadow:
+                0 35px 90px
+                rgba(0,0,0,0.55),
+                0 0 50px
+                rgba(124,58,237,0.10);
         }
 
-        .visual-sidebar {
-            padding: 20px 14px;
+        .preview-sidebar {
+            padding: 18px 10px;
 
             background:
                 #090910;
 
             border-right:
                 1px solid
-                #1d1927;
+                #211b30;
         }
 
-        .visual-server {
-            display: flex;
+        .preview-brand {
+            padding: 5px 8px 20px;
 
-            align-items: center;
-
-            gap: 9px;
-
-            margin-bottom: 24px;
-
-            font-size: 11px;
+            font-size: 10px;
 
             font-weight: 800;
         }
 
-        .visual-server img {
-            width: 28px;
-            height: 28px;
-
-            border-radius: 8px;
-        }
-
-        .visual-menu {
+        .preview-nav {
             display: flex;
 
             flex-direction: column;
@@ -2896,1046 +2775,501 @@ return res.send(`
             gap: 5px;
         }
 
-        .visual-menu span {
-            padding:
-                8px 9px;
+        .preview-nav-item {
+            padding: 8px;
 
-            color: #686173;
+            color: #696376;
 
-            border-radius: 6px;
+            border-radius: 5px;
 
-            font-size: 9px;
+            font-size: 8px;
         }
 
-        .visual-menu span.active {
+        .preview-nav-item.active {
             color: #ffffff;
 
             background:
-                rgba(
-                    124,
-                    58,
-                    237,
-                    .18
-                );
+                rgba(124,58,237,0.18);
+
+            box-shadow:
+                inset 2px 0 #8b5cf6;
         }
 
-        .visual-content {
+        .preview-content {
             padding: 25px;
         }
 
-        .visual-header {
+        .preview-top {
             display: flex;
-
-            align-items: center;
 
             justify-content: space-between;
 
-            margin-bottom: 22px;
+            align-items: center;
+
+            margin-bottom: 20px;
         }
 
-        .visual-title {
-            font-size: 18px;
+        .preview-title {
+            font-size: 16px;
 
             font-weight: 800;
         }
 
-        .visual-status {
-            padding:
-                6px 10px;
+        .preview-status {
+            padding: 6px 9px;
+
+            border-radius: 5px;
 
             color: #4ade80;
 
             background:
-                rgba(
-                    34,
-                    197,
-                    94,
-                    .08
-                );
+                rgba(34,197,94,0.07);
+
+            font-size: 7px;
+        }
+
+        .preview-stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 8px;
+        }
+
+        .preview-stat {
+            padding: 13px;
+
+            background:
+                #10101a;
 
             border:
                 1px solid
-                rgba(
-                    34,
-                    197,
-                    94,
-                    .18
-                );
+                #211b30;
 
-            border-radius: 6px;
+            border-radius: 7px;
+        }
 
-            font-size: 8px;
+        .preview-stat-label {
+            color: #686274;
+
+            font-size: 7px;
+        }
+
+        .preview-stat-value {
+            margin-top: 6px;
+
+            font-size: 15px;
 
             font-weight: 800;
         }
 
-        .visual-cards {
+        .preview-panels {
             display: grid;
 
             grid-template-columns:
-                repeat(
-                    3,
-                    1fr
-                );
+                1.7fr 1fr;
 
-            gap: 10px;
+            gap: 8px;
+
+            margin-top: 8px;
         }
 
-        .visual-card {
-            min-height: 95px;
+        .preview-panel {
+            min-height: 190px;
 
             padding: 14px;
 
             background:
-                #11101a;
+                #10101a;
 
             border:
                 1px solid
-                #242033;
+                #211b30;
 
-            border-radius: 9px;
+            border-radius: 7px;
         }
 
-        .visual-card-icon {
-            margin-bottom: 13px;
-
-            font-size: 17px;
-        }
-
-        .visual-card strong {
-            display: block;
-
-            margin-bottom: 4px;
-
-            font-size: 10px;
-        }
-
-        .visual-card span {
-            color: #716b7d;
+        .preview-panel-title {
+            color: #c9c3d4;
 
             font-size: 8px;
 
-            line-height: 1.5;
+            font-weight: 700;
         }
 
-        /* -------------------------------------------------
-           SECTION
-        ------------------------------------------------- */
+        .fake-chart {
+            position: relative;
+
+            height: 130px;
+
+            margin-top: 15px;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    rgba(255,255,255,0.025) 1px,
+                    transparent 1px
+                );
+
+            background-size:
+                100% 32px;
+        }
+
+        .fake-chart svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .fake-line {
+            fill: none;
+
+            stroke: #8b5cf6;
+
+            stroke-width: 2;
+
+            filter:
+                drop-shadow(
+                    0 0 5px
+                    rgba(139,92,246,0.6)
+                );
+        }
+
+        .preview-list {
+            margin-top: 15px;
+        }
+
+        .preview-list-item {
+            display: flex;
+
+            justify-content: space-between;
+
+            padding: 9px 0;
+
+            border-bottom:
+                1px solid
+                #1d1927;
+
+            color: #797283;
+
+            font-size: 7px;
+        }
+
+        .preview-list-item strong {
+            color: #c8c1d4;
+        }
+
+        /* =========================================================
+           FEATURES
+        ========================================================= */
 
         .section {
-            width: min(
-                1120px,
-                90%
-            );
+            max-width: 1200px;
 
-            margin:
-                0 auto;
+            margin: 0 auto;
 
             padding:
-                105px 0;
+                100px 24px;
         }
 
         .section-heading {
             max-width: 650px;
 
-            margin-bottom: 45px;
+            margin: 0 auto 50px;
+
+            text-align: center;
         }
 
-        .eyebrow {
-            margin-bottom: 12px;
-
+        .section-kicker {
             color: #a855f7;
 
             font-size: 9px;
 
-            font-weight: 900;
+            font-weight: 800;
 
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
 
-            text-transform:
-                uppercase;
+            text-transform: uppercase;
         }
 
         .section-heading h2 {
-            margin-bottom: 13px;
-
-            font-size:
-                clamp(
-                    30px,
-                    4vw,
-                    48px
-                );
-
-            letter-spacing:
-                -1.8px;
-        }
-
-        .section-heading p {
-            color: #9c96a8;
-
-            font-size: 14px;
-
-            line-height: 1.7;
-        }
-
-        /* -------------------------------------------------
-           FEATURES
-        ------------------------------------------------- */
-
-        .feature-grid {
-            display: grid;
-
-            grid-template-columns:
-                repeat(
-                    3,
-                    1fr
-                );
-
-            gap: 13px;
-        }
-
-        .feature-card {
-            position: relative;
-
-            min-height: 210px;
-
-            padding: 25px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(
-                        18,
-                        16,
-                        28,
-                        .98
-                    ),
-                    rgba(
-                        11,
-                        11,
-                        18,
-                        .98
-                    )
-                );
-
-            border:
-                1px solid
-                #211a30;
-
-            border-radius: 13px;
-
-            overflow: hidden;
-
-            transition:
-                transform .25s ease,
-                border-color .25s ease,
-                box-shadow .25s ease;
-        }
-
-        .feature-card::before {
-            content: "";
-
-            position: absolute;
-
-            width: 120px;
-            height: 120px;
-
-            top: -65px;
-            right: -50px;
-
-            background:
-                rgba(
-                    124,
-                    58,
-                    237,
-                    .14
-                );
-
-            border-radius: 50%;
-
-            filter: blur(15px);
-        }
-
-        .feature-card:hover {
-            transform:
-                translateY(-5px);
-
-            border-color:
-                rgba(
-                    139,
-                    92,
-                    246,
-                    .42
-                );
-
-            box-shadow:
-                0 20px 45px
-                rgba(
-                    0,
-                    0,
-                    0,
-                    .25
-                );
-        }
-
-        .feature-icon {
-            width: 43px;
-            height: 43px;
-
-            display: grid;
-
-            place-items: center;
-
-            margin-bottom: 20px;
-
-            background:
-                rgba(
-                    124,
-                    58,
-                    237,
-                    .12
-                );
-
-            border:
-                1px solid
-                rgba(
-                    139,
-                    92,
-                    246,
-                    .20
-                );
-
-            border-radius: 10px;
-
-            font-size: 19px;
-        }
-
-        .feature-card h3 {
-            margin-bottom: 9px;
-
-            font-size: 14px;
-        }
-
-        .feature-card p {
-            color: #8d8798;
-
-            font-size: 11px;
-
-            line-height: 1.65;
-        }
-
-        /* -------------------------------------------------
-           HOW IT WORKS
-        ------------------------------------------------- */
-
-        .how-section {
-            width: min(
-                1120px,
-                90%
-            );
-
-            margin:
-                0 auto;
-
-            padding:
-                90px 0
-                110px;
-        }
-
-        .how-visual {
-            position: relative;
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(
-                    3,
-                    1fr
-                );
-
-            gap: 18px;
-
-            padding: 55px 30px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #0d0c14,
-                    #0a0910
-                );
-
-            border:
-                1px solid
-                #211a30;
-
-            border-radius: 18px;
-
-            overflow: hidden;
-        }
-
-        .how-visual::before {
-            content: "";
-
-            position: absolute;
-
-            width: 500px;
-            height: 300px;
-
-            left: 50%;
-            top: 50%;
-
-            transform:
-                translate(
-                    -50%,
-                    -50%
-                );
-
-            background:
-                radial-gradient(
-                    ellipse,
-                    rgba(
-                        124,
-                        58,
-                        237,
-                        .12
-                    ),
-                    transparent 70%
-                );
-
-            pointer-events: none;
-        }
-
-        .how-step {
-            position: relative;
-
-            z-index: 1;
-
-            text-align: center;
-        }
-
-        .how-number {
-            width: 44px;
-            height: 44px;
-
-            display: grid;
-
-            place-items: center;
-
-            margin:
-                0 auto
-                18px;
-
-            color: #c4b5fd;
-
-            background:
-                #171225;
-
-            border:
-                1px solid
-                #5b21b6;
-
-            border-radius: 50%;
-
-            font-size: 12px;
-
-            font-weight: 900;
-
-            box-shadow:
-                0 0 25px
-                rgba(
-                    124,
-                    58,
-                    237,
-                    .15
-                );
-        }
-
-        .how-step h3 {
-            margin-bottom: 9px;
-
-            font-size: 14px;
-        }
-
-        .how-step p {
-            max-width: 220px;
-
-            margin:
-                0 auto;
-
-            color: #858091;
-
-            font-size: 10px;
-
-            line-height: 1.65;
-        }
-
-        .how-line {
-            position: absolute;
-
-            top: 77px;
-            left: 23%;
-
-            width: 54%;
-
-            height: 1px;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    transparent,
-                    #6d28d9,
-                    transparent
-                );
-
-            opacity: .5;
-        }
-
-        /* -------------------------------------------------
-           STATS
-        ------------------------------------------------- */
-
-        .stats-section {
-            padding:
-                80px 6%;
-
-            border-top:
-                1px solid
-                rgba(
-                    139,
-                    92,
-                    246,
-                    .08
-                );
-
-            border-bottom:
-                1px solid
-                rgba(
-                    139,
-                    92,
-                    246,
-                    .08
-                );
-
-            background:
-                rgba(
-                    11,
-                    10,
-                    18,
-                    .55
-                );
-        }
-
-        .stats-inner {
-            width: min(
-                1050px,
-                90%
-            );
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(
-                    3,
-                    1fr
-                );
-
-            gap: 30px;
-
-            margin:
-                0 auto;
-
-            text-align: center;
-        }
-
-        .stat-number {
-            margin-bottom: 6px;
-
-            font-size: 34px;
-
-            font-weight: 900;
-
-            color: #c4b5fd;
-        }
-
-        .stat-label {
-            color: #777080;
-
-            font-size: 10px;
-
-            font-weight: 700;
-
-            letter-spacing: .5px;
-        }
-
-        /* -------------------------------------------------
-           REVIEWS
-        ------------------------------------------------- */
-
-        .reviews-section {
-            overflow: hidden;
-
-            padding:
-                105px 0
-                115px;
-        }
-
-        .reviews-heading {
-            width: min(
-                1120px,
-                90%
-            );
-
-            margin:
-                0 auto
-                40px;
-        }
-
-        .review-track-wrapper {
-            width: 100%;
-
-            overflow: hidden;
-
-            mask-image:
-                linear-gradient(
-                    90deg,
-                    transparent,
-                    black 8%,
-                    black 92%,
-                    transparent
-                );
-
-            -webkit-mask-image:
-                linear-gradient(
-                    90deg,
-                    transparent,
-                    black 8%,
-                    black 92%,
-                    transparent
-                );
-        }
-
-        .review-track {
-            display: flex;
-
-            width: max-content;
-
-            gap: 16px;
-
-            animation:
-                reviewScroll
-                35s
-                linear
-                infinite;
-        }
-
-        .review-track:hover {
-            animation-play-state:
-                paused;
-        }
-
-        .review-card {
-            width: 330px;
-
-            min-height: 190px;
-
-            padding: 21px;
-
-            background:
-                #0d0c14;
-
-            border:
-                1px solid
-                #211a30;
-
-            border-radius: 13px;
-
-            flex-shrink: 0;
-        }
-
-        .review-top {
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-            margin-bottom: 16px;
-        }
-
-        .review-avatar {
-            width: 37px;
-            height: 37px;
-
-            display: grid;
-
-            place-items: center;
-
-            border-radius: 50%;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #7c3aed,
-                    #25104f
-                );
-
-            color: #ffffff;
-
-            font-size: 11px;
-
-            font-weight: 900;
-
-            overflow: hidden;
-        }
-
-        .review-avatar img {
-            width: 100%;
-            height: 100%;
-
-            object-fit: cover;
-        }
-
-        .review-user {
-            flex: 1;
-        }
-
-        .review-username {
-            margin-bottom: 3px;
-
-            font-size: 10px;
-
-            font-weight: 800;
-        }
-
-        .review-date {
-            color: #625c6d;
-
-            font-size: 8px;
-        }
-
-        .review-stars {
-            color: #fbbf24;
-
-            font-size: 11px;
-
-            letter-spacing: 1px;
-        }
-
-        .review-note {
-            color: #aaa4b4;
-
-            font-size: 11px;
-
-            line-height: 1.7;
-        }
-
-        @keyframes reviewScroll {
-
-            from {
-                transform:
-                    translateX(0);
-            }
-
-            to {
-                transform:
-                    translateX(
-                        -50%
-                    );
-            }
-
-        }
-
-        /* -------------------------------------------------
-           COMMUNITY
-        ------------------------------------------------- */
-
-        .community {
-            width: min(
-                1120px,
-                90%
-            );
-
-            margin:
-                0 auto;
-
-            padding:
-                40px 0
-                110px;
-        }
-
-        .community-card {
-            position: relative;
-
-            display: grid;
-
-            grid-template-columns:
-                1.2fr
-                .8fr;
-
-            gap: 30px;
-
-            padding:
-                45px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(
-                        37,
-                        16,
-                        79,
-                        .55
-                    ),
-                    rgba(
-                        13,
-                        12,
-                        20,
-                        .95
-                    )
-                );
-
-            border:
-                1px solid
-                rgba(
-                    139,
-                    92,
-                    246,
-                    .22
-                );
-
-            border-radius: 18px;
-
-            overflow: hidden;
-        }
-
-        .community-card h2 {
-            margin-bottom: 13px;
-
-            font-size:
-                clamp(
-                    25px,
-                    4vw,
-                    40px
-                );
-
-            letter-spacing:
-                -1.5px;
-        }
-
-        .community-card p {
-            max-width: 560px;
-
-            color: #9993a5;
-
-            font-size: 12px;
-
-            line-height: 1.75;
-        }
-
-        .community-actions {
-            display: flex;
-
-            align-items: center;
-
-            justify-content: flex-end;
-
-            gap: 10px;
-        }
-
-        .community-actions a {
-            padding:
-                12px 17px;
-
-            border-radius: 8px;
-
-            font-size: 10px;
-
-            font-weight: 800;
-        }
-
-        .discord-button {
-            background:
-                #5865f2;
-
-            box-shadow:
-                0 10px 30px
-                rgba(
-                    88,
-                    101,
-                    242,
-                    .20
-                );
-        }
-
-        .support-button {
-            background:
-                rgba(
-                    255,
-                    255,
-                    255,
-                    .04
-                );
-
-            border:
-                1px solid
-                #31293f;
-        }
-
-        /* -------------------------------------------------
-           FINAL CTA
-        ------------------------------------------------- */
-
-        .final-cta {
-            padding:
-                105px 20px;
-
-            text-align: center;
-        }
-
-        .final-cta h2 {
-            margin-bottom: 13px;
+            margin: 12px 0 0;
 
             font-size:
                 clamp(
                     32px,
                     5vw,
-                    55px
+                    48px
                 );
 
-            letter-spacing:
-                -2px;
+            letter-spacing: -2px;
         }
 
-        .final-cta p {
-            margin-bottom: 28px;
+        .section-heading p {
+            margin-top: 15px;
 
-            color: #8f8999;
+            color: #7e778b;
 
             font-size: 13px;
+
+            line-height: 1.7;
         }
 
-        /* -------------------------------------------------
+        .features-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 12px;
+        }
+
+        .feature-card {
+            position: relative;
+
+            padding: 25px;
+
+            min-height: 220px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(18,17,27,0.95),
+                    rgba(9,9,15,0.95)
+                );
+
+            border:
+                1px solid
+                #211a34;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .feature-card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 150px;
+            height: 150px;
+
+            top: -80px;
+            right: -70px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(124,58,237,0.16),
+                    transparent 70%
+                );
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+
+            border-color:
+                rgba(139,92,246,0.35);
+
+            box-shadow:
+                0 18px 45px
+                rgba(76,29,149,0.12);
+        }
+
+        .feature-icon {
+            width: 42px;
+            height: 42px;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 10px;
+
+            color: #c084fc;
+
+            background:
+                rgba(124,58,237,0.10);
+
+            border:
+                1px solid
+                rgba(139,92,246,0.18);
+
+            font-size: 18px;
+        }
+
+        .feature-card h3 {
+            margin:
+                22px 0 8px;
+
+            font-size: 15px;
+        }
+
+        .feature-card p {
+            margin: 0;
+
+            color: #777082;
+
+            font-size: 11px;
+
+            line-height: 1.7;
+        }
+
+        /* =========================================================
+           COMMUNITY
+        ========================================================= */
+
+        .community {
+            position: relative;
+
+            max-width: 1150px;
+
+            margin:
+                20px auto 100px;
+
+            padding:
+                70px 40px;
+
+            text-align: center;
+
+            border:
+                1px solid
+                #291f3d;
+
+            border-radius: 16px;
+
+            background:
+                radial-gradient(
+                    circle at 50% 0%,
+                    rgba(124,58,237,0.13),
+                    transparent 65%
+                ),
+                #0b0a12;
+
+            overflow: hidden;
+        }
+
+        .community h2 {
+            margin: 0;
+
+            font-size:
+                clamp(
+                    30px,
+                    5vw,
+                    46px
+                );
+
+            letter-spacing: -2px;
+        }
+
+        .community p {
+            max-width: 620px;
+
+            margin:
+                16px auto 0;
+
+            color: #827b8d;
+
+            font-size: 13px;
+
+            line-height: 1.8;
+        }
+
+        .community-slogan {
+            margin-top: 18px;
+
+            color: #c084fc;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+        .community-actions {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-top: 28px;
+        }
+
+        /* =========================================================
            FOOTER
-        ------------------------------------------------- */
+        ========================================================= */
 
         footer {
             border-top:
                 1px solid
-                #1b1725;
+                #171420;
 
             background:
-                #08080d;
+                #050509;
         }
 
         .footer-inner {
-            width: min(
-                1120px,
-                90%
-            );
+            max-width: 1200px;
 
-            margin:
-                0 auto;
+            margin: 0 auto;
 
             padding:
-                55px 0
-                25px;
+                45px 24px 25px;
         }
 
         .footer-top {
             display: grid;
 
             grid-template-columns:
-                1.7fr
-                1fr
-                1fr
-                1fr;
+                1.5fr 1fr 1fr 1fr;
 
-            gap: 40px;
-
-            padding-bottom:
-                40px;
-        }
-
-        .footer-brand {
-            max-width: 300px;
-        }
-
-        .footer-brand-link {
-            display: inline-flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-            margin-bottom: 14px;
-        }
-
-        .footer-brand-link img {
-            width: 38px;
-            height: 38px;
-
-            object-fit: contain;
-
-            border-radius: 9px;
-        }
-
-        .footer-brand-name {
-            display: block;
-
-            font-size: 14px;
-
-            font-weight: 900;
-        }
-
-        .footer-brand-subtitle {
-            display: block;
-
-            margin-top: 2px;
-
-            color: #766e82;
-
-            font-size: 7px;
-
-            font-weight: 800;
-
-            letter-spacing: 1.3px;
+            gap: 35px;
         }
 
         .footer-brand p {
-            color: #756e7f;
+            max-width: 300px;
+
+            color: #686171;
 
             font-size: 10px;
 
             line-height: 1.7;
         }
 
-        .footer-column {
-            display: flex;
-
-            flex-direction: column;
-
-            gap: 10px;
-        }
-
         .footer-column h4 {
-            margin-bottom: 5px;
+            margin:
+                0 0 13px;
 
-            color: #ffffff;
-
-            font-size: 10px;
-        }
-
-        .footer-column a {
-            color: #70697a;
+            color: #aaa3b3;
 
             font-size: 9px;
 
-            transition:
-                color .2s ease;
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+        }
+
+        .footer-column a {
+            display: block;
+
+            margin-bottom: 9px;
+
+            color: #66606e;
+
+            font-size: 9px;
+
+            transition: 0.2s ease;
         }
 
         .footer-column a:hover {
-            color: #c4b5fd;
+            color: #ffffff;
         }
 
         .footer-bottom {
@@ -3943,89 +3277,65 @@ return res.send(`
 
             justify-content: space-between;
 
+            align-items: center;
+
             gap: 20px;
 
-            padding-top:
-                22px;
+            margin-top: 40px;
+
+            padding-top: 20px;
 
             border-top:
                 1px solid
-                #17131f;
+                #15121d;
 
-            color: #55505e;
+            color: #514c59;
 
             font-size: 8px;
         }
 
-        /* -------------------------------------------------
-           MOBILE
-        ------------------------------------------------- */
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
 
         @media (max-width: 900px) {
 
-            .nav-links {
-                gap: 15px;
-
-                margin-right: 15px;
+            .nav-links a:not(.nav-login) {
+                display: none;
             }
 
-            .feature-grid {
+            .dashboard-preview {
+                grid-template-columns: 110px 1fr;
+            }
+
+            .features-grid {
                 grid-template-columns:
-                    repeat(
-                        2,
-                        1fr
-                    );
-            }
-
-            .visual-window {
-                grid-template-columns:
-                    130px
-                    1fr;
-            }
-
-            .community-card {
-                grid-template-columns: 1fr;
-            }
-
-            .community-actions {
-                justify-content:
-                    flex-start;
+                    repeat(2, 1fr);
             }
 
             .footer-top {
                 grid-template-columns:
-                    repeat(
-                        2,
-                        1fr
-                    );
+                    repeat(2, 1fr);
             }
 
         }
 
         @media (max-width: 650px) {
 
-            .site-nav {
-                height: 68px;
-
+            .navbar {
                 padding:
-                    0 18px;
-            }
-
-            .nav-links {
-                display: none;
+                    15px 18px;
             }
 
             .hero {
-                min-height: 760px;
+                min-height: 720px;
 
                 padding:
-                    120px 20px
-                    70px;
+                    130px 18px 70px;
             }
 
             .hero h1 {
-                letter-spacing:
-                    -2.5px;
+                letter-spacing: -2px;
             }
 
             .hero-description {
@@ -4035,65 +3345,35 @@ return res.send(`
             .hero-actions {
                 flex-direction: column;
 
-                align-items: stretch;
+                max-width: 280px;
+
+                margin-left: auto;
+                margin-right: auto;
             }
 
-            .primary-button,
-            .secondary-button {
-                width: 100%;
-            }
-
-            .hero-visual {
-                margin-top: 50px;
-            }
-
-            .visual-window {
-                grid-template-columns: 1fr;
-            }
-
-            .visual-sidebar {
+            .preview-wrapper {
                 display: none;
             }
 
-            .visual-content {
-                padding: 18px;
-            }
-
-            .visual-cards {
-                grid-template-columns:
-                    1fr;
-            }
-
-            .feature-grid {
+            .features-grid {
                 grid-template-columns: 1fr;
             }
 
-            .how-visual {
-                grid-template-columns: 1fr;
-
-                padding: 40px 20px;
+            .section {
+                padding:
+                    75px 18px;
             }
 
-            .how-line {
-                display: none;
-            }
+            .community {
+                margin:
+                    10px 18px 70px;
 
-            .stats-inner {
-                grid-template-columns: 1fr;
-            }
-
-            .community-card {
-                padding: 28px;
+                padding:
+                    50px 22px;
             }
 
             .community-actions {
                 flex-direction: column;
-
-                align-items: stretch;
-            }
-
-            .community-actions a {
-                text-align: center;
             }
 
             .footer-top {
@@ -4102,6 +3382,8 @@ return res.send(`
 
             .footer-bottom {
                 flex-direction: column;
+
+                align-items: flex-start;
             }
 
         }
@@ -4112,74 +3394,76 @@ return res.send(`
 
 <body>
 
-    <!-- =================================================
-         NAVBAR
-    ================================================== -->
+    <!-- =========================================================
+         NAVIGATION
+    ========================================================= -->
 
-    <nav class="site-nav">
+    <nav class="navbar">
 
-        <a
-            href="/dashboard"
-            class="nav-brand"
-        >
+        <div class="navbar-inner">
 
-            <img
-                class="nav-logo"
-                src="/dashboard/assets/btw-mechanic-logo.png"
-                alt="BTW Mechanic"
+            <a
+                href="/dashboard"
+                class="brand"
             >
 
-            <span class="nav-brand-text">
+                <img
+                    class="brand-logo"
+                    src="/dashboard/assets/btw-mechanic-logo.png"
+                    alt="BTW Mechanic"
+                >
 
-                <span class="nav-brand-name">
-                    BTW Mechanic
-                </span>
+                <div class="brand-text">
 
-                <span class="nav-brand-subtitle">
-                    BEYOND TWO WHEELS
-                </span>
+                    <span>
+                        BTW Mechanic
+                    </span>
 
-            </span>
+                    <span class="brand-subtitle">
+                        BEYOND TWO WHEELS
+                    </span>
 
-        </a>
+                </div>
 
-        <div class="nav-links">
-
-            <a href="#features">
-                Features
             </a>
 
-            <a href="#how-it-works">
-                How It Works
-            </a>
+            <div class="nav-links">
 
-            <a href="#reviews">
-                Reviews
-            </a>
+                <a href="#features">
+                    Features
+                </a>
 
-            <a href="#community">
-                Community
-            </a>
+                <a href="#dashboard">
+                    Dashboard
+                </a>
+
+                <a href="#community">
+                    Community
+                </a>
+
+                <a
+                    href="/dashboard/auth/discord"
+                    class="nav-login"
+                >
+                    Dashboard
+                </a>
+
+            </div>
 
         </div>
-
-        <a
-            class="nav-button"
-            href="https://discord.com/oauth2/authorize?client_id=1535038083957919765&permissions=8&integration_type=0&scope=bot"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            Add to Discord
-        </a>
 
     </nav>
 
 
-    <!-- =================================================
+    <!-- =========================================================
          HERO
-    ================================================== -->
+    ========================================================= -->
 
-    <header class="hero">
+    <section class="hero">
+
+        <div class="hero-glow"></div>
+
+        <div class="hero-glow-left"></div>
 
         <div class="hero-content">
 
@@ -4187,183 +3471,263 @@ return res.send(`
 
                 <span class="hero-badge-dot"></span>
 
-                BUILT FOR BEYOND TWO WHEELS
+                Built by the BTW community - For the community
 
             </div>
 
             <h1>
 
                 Your community.
+
                 <br>
 
-                Your wheels.
-                <br>
+                <span class="gradient">
+                    Powered by 
 
-                <span class="purple">
-                    Your mechanic.
+                    <br>
+
+                    <span class="gradient">
+                    The BTW Mechanic
                 </span>
 
             </h1>
 
             <p class="hero-description">
 
-                Powerful Discord tools built specifically
-                for the Beyond Two Wheels community.
-                Keep your server organised, supported
-                and connected with BTW Mechanic.
+                A powerful Discord bot built specifically
+                for the Beyond Two Wheels community —
+                bringing moderation, support, ranks,
+                events and server utilities together
+                in one place.
 
             </p>
+
+            <div class="hero-slogan">
+
+                Serving the Beyond Two Wheels Community,
+                one crank at a time.
+
+            </div>
 
             <div class="hero-actions">
 
                 <a
-                    class="primary-button"
                     href="https://discord.com/oauth2/authorize?client_id=1535038083957919765&permissions=8&integration_type=0&scope=bot"
+                    class="button button-primary"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    Add to Discord
+                    ⚙ Add to Discord
                 </a>
 
                 <a
-                    class="secondary-button"
-                    href="#features"
+                    href="https://discord.gg/wUGdq9fqDX"
+                    class="button button-secondary"
+                    target="_blank"
+                    rel="noopener noreferrer"
                 >
-                    Explore Features
+                    🏍 Join Beyond Two Wheels
                 </a>
 
             </div>
 
-            <!-- COMMUNITY + BOT PREVIEW -->
 
-            <div class="hero-visual">
+            <!-- DASHBOARD PREVIEW -->
 
-                <div class="community-preview">
+            <div
+                class="preview-wrapper"
+                id="dashboard"
+            >
 
-                    <div class="discord-widget">
+                <div class="preview-glow"></div>
 
-                        <iframe
-                            src="https://discord.com/widget?id=1534313294138052818&theme=dark"
-                            width="350"
-                            height="500"
-                            allowtransparency="true"
-                            frameborder="0"
-                            sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
-                        ></iframe>
+                <div class="dashboard-preview">
+
+                    <div class="preview-sidebar">
+
+                        <div class="preview-brand">
+                            ⚙ BTW Mechanic
+                        </div>
+
+                        <div class="preview-nav">
+
+                            <div class="preview-nav-item active">
+                                ⌂ Dashboard
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ♙ Servers
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ♙ Users
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ⌘ Commands
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ◈ Moderation
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ▱ Tickets
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ♢ Giveaways
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ♫ Music
+                            </div>
+
+                            <div class="preview-nav-item">
+                                ⚙ Settings
+                            </div>
+
+                        </div>
 
                     </div>
 
+                    <div class="preview-content">
 
-                    <div class="mechanic-preview">
+                        <div class="preview-top">
 
-                        <div class="mechanic-preview-badge">
-                            <span></span>
-                            BTW MECHANIC
+                            <div class="preview-title">
+                                Dashboard
+                            </div>
+
+                            <div class="preview-status">
+                                ● BOT ONLINE
+                            </div>
+
                         </div>
 
-                        <h3>
-                            Your server's
-                            <br>
-                            <span class="purple">
-                                digital mechanic.
-                            </span>
-                        </h3>
+                        <div class="preview-stats">
 
-                        <p>
-                            Built to handle the repetitive
-                            work behind your Discord community,
-                            so your staff can focus on what
-                            actually matters.
-                        </p>
+                            <div class="preview-stat">
 
-
-                        <div class="mechanic-preview-features">
-
-                            <div class="mechanic-preview-feature">
-
-                                <div class="mechanic-feature-icon">
-                                    🛡️
+                                <div class="preview-stat-label">
+                                    Servers
                                 </div>
 
-                                <div>
-                                    <strong>
-                                        Moderation
-                                    </strong>
-
-                                    <span>
-                                        Keep things organised.
-                                    </span>
+                                <div class="preview-stat-value">
+                                    1
                                 </div>
 
                             </div>
 
+                            <div class="preview-stat">
 
-                            <div class="mechanic-preview-feature">
-
-                                <div class="mechanic-feature-icon">
-                                    🎫
+                                <div class="preview-stat-label">
+                                    Users
                                 </div>
 
-                                <div>
-                                    <strong>
-                                        Support
-                                    </strong>
-
-                                    <span>
-                                        Help members when they need it.
-                                    </span>
+                                <div class="preview-stat-value">
+                                    1,284
                                 </div>
 
                             </div>
 
+                            <div class="preview-stat">
 
-                            <div class="mechanic-preview-feature">
-
-                                <div class="mechanic-feature-icon">
-                                    📊
+                                <div class="preview-stat-label">
+                                    Messages
                                 </div>
 
-                                <div>
-                                    <strong>
-                                        Ranks & XP
-                                    </strong>
-
-                                    <span>
-                                        Reward your community.
-                                    </span>
+                                <div class="preview-stat-value">
+                                    24.8K
                                 </div>
 
                             </div>
 
+                            <div class="preview-stat">
 
-                            <div class="mechanic-preview-feature">
-
-                                <div class="mechanic-feature-icon">
-                                    ⚙️
+                                <div class="preview-stat-label">
+                                    Commands
                                 </div>
 
-                                <div>
-                                    <strong>
-                                        Automation
-                                    </strong>
-
-                                    <span>
-                                        Let the bot handle the busywork.
-                                    </span>
+                                <div class="preview-stat-value">
+                                    8.4K
                                 </div>
 
                             </div>
 
                         </div>
 
+                        <div class="preview-panels">
 
-                        <div class="mechanic-preview-status">
+                            <div class="preview-panel">
 
-                            <span class="status-dot"></span>
+                                <div class="preview-panel-title">
+                                    Command Usage
+                                </div>
 
-                            <span>
-                                BTW Mechanic is online
-                            </span>
+                                <div class="fake-chart">
+
+                                    <svg
+                                        viewBox="0 0 600 130"
+                                        preserveAspectRatio="none"
+                                    >
+
+                                        <path
+                                            class="fake-line"
+                                            d="
+                                                M0 110
+                                                L50 100
+                                                L100 106
+                                                L150 72
+                                                L200 86
+                                                L250 60
+                                                L300 70
+                                                L350 35
+                                                L400 55
+                                                L450 45
+                                                L500 20
+                                                L550 35
+                                                L600 10
+                                            "
+                                        />
+
+                                    </svg>
+
+                                </div>
+
+                            </div>
+
+                            <div class="preview-panel">
+
+                                <div class="preview-panel-title">
+                                    Top Commands
+                                </div>
+
+                                <div class="preview-list">
+
+                                    <div class="preview-list-item">
+                                        <strong>/help</strong>
+                                        1,248
+                                    </div>
+
+                                    <div class="preview-list-item">
+                                        <strong>/warn</strong>
+                                        634
+                                    </div>
+
+                                    <div class="preview-list-item">
+                                        <strong>/ticket</strong>
+                                        421
+                                    </div>
+
+                                    <div class="preview-list-item">
+                                        <strong>/rank</strong>
+                                        318
+                                    </div>
+
+                                </div>
+
+                            </div>
 
                         </div>
 
@@ -4375,12 +3739,12 @@ return res.send(`
 
         </div>
 
-    </header>
+    </section>
 
 
-    <!-- =================================================
+    <!-- =========================================================
          FEATURES
-    ================================================== -->
+    ========================================================= -->
 
     <section
         class="section"
@@ -4389,29 +3753,26 @@ return res.send(`
 
         <div class="section-heading">
 
-            <div class="eyebrow">
-                EVERYTHING YOU NEED
+            <div class="section-kicker">
+                Everything you need
             </div>
 
             <h2>
-                One mechanic.
-                <br>
-                Plenty of tools.
+                Built around your community.
             </h2>
 
             <p>
-                BTW Mechanic brings the tools your
-                Discord community needs together in
-                one place, without the clutter.
+                BTW Mechanic brings the tools that keep
+                Beyond Two Wheels running together in one
+                powerful Discord bot.
             </p>
 
         </div>
 
+        <div class="features-grid">
 
-        <div class="feature-grid">
 
-
-            <article class="feature-card">
+            <div class="feature-card">
 
                 <div class="feature-icon">
                     🛠️
@@ -4422,15 +3783,15 @@ return res.send(`
                 </h3>
 
                 <p>
-                    Keep the server clean, safe and
-                    well-managed with powerful
-                    moderation tools.
+                    Keep your community clean, safe and
+                    well-managed with powerful moderation
+                    tools built directly into Discord.
                 </p>
 
-            </article>
+            </div>
 
 
-            <article class="feature-card">
+            <div class="feature-card">
 
                 <div class="feature-icon">
                     🎫
@@ -4441,15 +3802,15 @@ return res.send(`
                 </h3>
 
                 <p>
-                    Give members a private way to
-                    contact the moderation team
-                    whenever they need help.
+                    Give members a private and simple way
+                    to contact your moderation team whenever
+                    they need help.
                 </p>
 
-            </article>
+            </div>
 
 
-            <article class="feature-card">
+            <div class="feature-card">
 
                 <div class="feature-icon">
                     📊
@@ -4460,15 +3821,15 @@ return res.send(`
                 </h3>
 
                 <p>
-                    Reward active members with XP,
-                    ranks and progression as they
-                    participate in the community.
+                    Reward active members with XP, ranks
+                    and progression that encourage people
+                    to stay involved.
                 </p>
 
-            </article>
+            </div>
 
 
-            <article class="feature-card">
+            <div class="feature-card">
 
                 <div class="feature-icon">
                     🎉
@@ -4479,15 +3840,15 @@ return res.send(`
                 </h3>
 
                 <p>
-                    Make community events, giveaways
-                    and announcements easier to
-                    organise and manage.
+                    Make community events, announcements
+                    and engagement easier to organise and
+                    manage.
                 </p>
 
-            </article>
+            </div>
 
 
-            <article class="feature-card">
+            <div class="feature-card">
 
                 <div class="feature-icon">
                     🤖
@@ -4498,177 +3859,29 @@ return res.send(`
                 </h3>
 
                 <p>
-                    Automation, member management,
-                    useful commands and tools for
-                    keeping your server running.
+                    Automation, logging, member management
+                    and useful utilities designed to keep
+                    your server running smoothly.
                 </p>
 
-            </article>
+            </div>
 
 
-            <article class="feature-card">
+            <div class="feature-card">
 
                 <div class="feature-icon">
-                    📋
+                    📈
                 </div>
 
                 <h3>
-                    Logging
+                    Web Dashboard
                 </h3>
 
                 <p>
-                    Keep important server activity
-                    organised and easy for staff
-                    to keep track of.
+                    See your bot's activity, command usage,
+                    server statistics and system status from
+                    one central dashboard.
                 </p>
-
-            </article>
-
-
-        </div>
-
-    </section>
-
-
-    <!-- =================================================
-         HOW IT WORKS
-    ================================================== -->
-
-    <section
-        class="how-section"
-        id="how-it-works"
-    >
-
-        <div class="section-heading">
-
-            <div class="eyebrow">
-                SIMPLE BY DESIGN
-            </div>
-
-            <h2>
-                Your server.
-                <br>
-                Running smoother.
-            </h2>
-
-            <p>
-                BTW Mechanic works quietly in the
-                background while giving your staff
-                the tools they need to manage the
-                community.
-            </p>
-
-        </div>
-
-
-        <div class="how-visual">
-
-            <div class="how-line"></div>
-
-
-            <div class="how-step">
-
-                <div class="how-number">
-                    01
-                </div>
-
-                <h3>
-                    Add BTW Mechanic
-                </h3>
-
-                <p>
-                    Invite the bot to your Discord
-                    server and get everything connected.
-                </p>
-
-            </div>
-
-
-            <div class="how-step">
-
-                <div class="how-number">
-                    02
-                </div>
-
-                <h3>
-                    Configure your tools
-                </h3>
-
-                <p>
-                    Choose the moderation, support,
-                    ranks, events and utilities your
-                    community needs.
-                </p>
-
-            </div>
-
-
-            <div class="how-step">
-
-                <div class="how-number">
-                    03
-                </div>
-
-                <h3>
-                    Let it work
-                </h3>
-
-                <p>
-                    BTW Mechanic handles the repetitive
-                    work while your community keeps moving.
-                </p>
-
-            </div>
-
-
-        </div>
-
-    </section>
-
-
-    <!-- =================================================
-         COMMUNITY STATS
-    ================================================== -->
-
-    <section class="stats-section">
-
-        <div class="stats-inner">
-
-            <div>
-
-                <div class="stat-number">
-                    1
-                </div>
-
-                <div class="stat-label">
-                    COMMUNITY
-                </div>
-
-            </div>
-
-
-            <div>
-
-                <div class="stat-number">
-                    100+
-                </div>
-
-                <div class="stat-label">
-                    COMMANDS & TOOLS
-                </div>
-
-            </div>
-
-
-            <div>
-
-                <div class="stat-number">
-                    24/7
-                </div>
-
-                <div class="stat-label">
-                    BOT AVAILABILITY
-                </div>
 
             </div>
 
@@ -4677,437 +3890,65 @@ return res.send(`
     </section>
 
 
-    <!-- =================================================
-         REVIEWS
-    ================================================== -->
-
-    <section
-        class="reviews-section"
-        id="reviews"
-    >
-
-        <div class="reviews-heading">
-
-            <div class="eyebrow">
-                COMMUNITY REVIEWS
-            </div>
-
-            <div class="section-heading">
-
-                <h2>
-                    Don't just take
-                    our word for it.
-                </h2>
-
-                <p>
-                    Real feedback from the people
-                    using BTW Mechanic.
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <div class="review-track-wrapper">
-
-            <div class="review-track">
-
-
-                <!-- REVIEW 1 -->
-
-                <article class="review-card">
-
-                    <div class="review-top">
-
-                        <div class="review-avatar">
-                            ?
-                        </div>
-
-                        <div class="review-user">
-
-                            <div class="review-username">
-                                Your Username
-                            </div>
-
-                            <div class="review-date">
-                                16 Aug 2026 · 18:42
-                            </div>
-
-                        </div>
-
-                        <div class="review-stars">
-                            ★★★★★
-                        </div>
-
-                    </div>
-
-                    <p class="review-note">
-                        Your testimonial goes here.
-                        Replace this with a real review
-                        from your community.
-                    </p>
-
-                </article>
-
-
-                <!-- REVIEW 2 -->
-
-                <article class="review-card">
-
-                    <div class="review-top">
-
-                        <div class="review-avatar">
-                            ?
-                        </div>
-
-                        <div class="review-user">
-
-                            <div class="review-username">
-                                Your Username
-                            </div>
-
-                            <div class="review-date">
-                                15 Aug 2026 · 14:20
-                            </div>
-
-                        </div>
-
-                        <div class="review-stars">
-                            ★★★★★
-                        </div>
-
-                    </div>
-
-                    <p class="review-note">
-                        Your testimonial goes here.
-                        Replace this with a real review
-                        from your community.
-                    </p>
-
-                </article>
-
-
-                <!-- REVIEW 3 -->
-
-                <article class="review-card">
-
-                    <div class="review-top">
-
-                        <div class="review-avatar">
-                            ?
-                        </div>
-
-                        <div class="review-user">
-
-                            <div class="review-username">
-                                Your Username
-                            </div>
-
-                            <div class="review-date">
-                                14 Aug 2026 · 20:05
-                            </div>
-
-                        </div>
-
-                        <div class="review-stars">
-                            ★★★★★
-                        </div>
-
-                    </div>
-
-                    <p class="review-note">
-                        Your testimonial goes here.
-                        Replace this with a real review
-                        from your community.
-                    </p>
-
-                </article>
-
-
-                <!-- REVIEW 4 -->
-
-                <article class="review-card">
-
-                    <div class="review-top">
-
-                        <div class="review-avatar">
-                            ?
-                        </div>
-
-                        <div class="review-user">
-
-                            <div class="review-username">
-                                Your Username
-                            </div>
-
-                            <div class="review-date">
-                                13 Aug 2026 · 17:31
-                            </div>
-
-                        </div>
-
-                        <div class="review-stars">
-                            ★★★★★
-                        </div>
-
-                    </div>
-
-                    <p class="review-note">
-                        Your testimonial goes here.
-                        Replace this with a real review
-                        from your community.
-                    </p>
-
-                </article>
-
-
-                <!-- DUPLICATES FOR SMOOTH LOOP -->
-
-
-                <article class="review-card">
-
-                    <div class="review-top">
-
-                        <div class="review-avatar">
-                            ?
-                        </div>
-
-                        <div class="review-user">
-
-                            <div class="review-username">
-                                Your Username
-                            </div>
-
-                            <div class="review-date">
-                                16 Aug 2026 · 18:42
-                            </div>
-
-                        </div>
-
-                        <div class="review-stars">
-                            ★★★★★
-                        </div>
-
-                    </div>
-
-                    <p class="review-note">
-                        Your testimonial goes here.
-                        Replace this with a real review
-                        from your community.
-                    </p>
-
-                </article>
-
-
-                <article class="review-card">
-
-                    <div class="review-top">
-
-                        <div class="review-avatar">
-                            ?
-                        </div>
-
-                        <div class="review-user">
-
-                            <div class="review-username">
-                                Your Username
-                            </div>
-
-                            <div class="review-date">
-                                15 Aug 2026 · 14:20
-                            </div>
-
-                        </div>
-
-                        <div class="review-stars">
-                            ★★★★★
-                        </div>
-
-                    </div>
-
-                    <p class="review-note">
-                        Your testimonial goes here.
-                        Replace this with a real review
-                        from your community.
-                    </p>
-
-                </article>
-
-
-                <article class="review-card">
-
-                    <div class="review-top">
-
-                        <div class="review-avatar">
-                            ?
-                        </div>
-
-                        <div class="review-user">
-
-                            <div class="review-username">
-                                Your Username
-                            </div>
-
-                            <div class="review-date">
-                                14 Aug 2026 · 20:05
-                            </div>
-
-                        </div>
-
-                        <div class="review-stars">
-                            ★★★★★
-                        </div>
-
-                    </div>
-
-                    <p class="review-note">
-                        Your testimonial goes here.
-                        Replace this with a real review
-                        from your community.
-                    </p>
-
-                </article>
-
-
-                <article class="review-card">
-
-                    <div class="review-top">
-
-                        <div class="review-avatar">
-                            ?
-                        </div>
-
-                        <div class="review-user">
-
-                            <div class="review-username">
-                                Your Username
-                            </div>
-
-                            <div class="review-date">
-                                13 Aug 2026 · 17:31
-                            </div>
-
-                        </div>
-
-                        <div class="review-stars">
-                            ★★★★★
-                        </div>
-
-                    </div>
-
-                    <p class="review-note">
-                        Your testimonial goes here.
-                        Replace this with a real review
-                        from your community.
-                    </p>
-
-                </article>
-
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- =================================================
-         COMMUNITY
-    ================================================== -->
+    <!-- =========================================================
+         COMMUNITY CTA
+    ========================================================= -->
 
     <section
         class="community"
         id="community"
     >
 
-        <div class="community-card">
-
-            <div>
-
-                <div class="eyebrow">
-                    BEYOND TWO WHEELS
-                </div>
-
-                <h2>
-                    Built around
-                    <br>
-                    the community.
-                </h2>
-
-                <p>
-                    BTW Mechanic was created to serve
-                    Beyond Two Wheels — bringing useful
-                    tools, automation and community
-                    features together in one place.
-                </p>
-
-            </div>
-
-
-            <div class="community-actions">
-
-                <a
-                    class="discord-button"
-                    href="https://discord.gg/wUGdq9fqDX"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Join Beyond Two Wheels
-                </a>
-
-                <a
-                    class="support-button"
-                    href="https://discord.gg/wtrjtFBmag"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Support Server
-                </a>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- =================================================
-         FINAL CTA
-    ================================================== -->
-
-    <section class="final-cta">
-
-        <div class="eyebrow">
-            READY TO GET STARTED?
+        <div class="section-kicker">
+            Beyond Two Wheels Collective
         </div>
 
         <h2>
-            Give your server
+            Driven by passion.
             <br>
-            a mechanic.
+            Connected by wheels.
         </h2>
 
         <p>
-            Add BTW Mechanic to your Discord server
-            and start building a better community.
+            BTW Mechanic is built to serve the community
+            behind Beyond Two Wheels — giving members and
+            staff the tools they need to keep the server
+            active, organised and connected.
         </p>
 
-        <a
-            class="primary-button"
-            href="https://discord.com/oauth2/authorize?client_id=1535038083957919765&permissions=8&integration_type=0&scope=bot"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            Add BTW Mechanic
-        </a>
+        <div class="community-slogan">
+            Serving the Beyond Two Wheels Community,
+            one crank at a time.
+        </div>
+
+        <div class="community-actions">
+
+            <a
+                href="https://discord.gg/wUGdq9fqDX"
+                class="button button-primary"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                🏍 Join the Community
+            </a>
+
+            <a
+                href="https://discord.gg/wtrjtFBmag"
+                class="button button-secondary"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                🎫 Visit Support
+            </a>
+
+        </div>
 
     </section>
 
 
-    <!-- =================================================
+    <!-- =========================================================
          FOOTER
-    ================================================== -->
+    ========================================================= -->
 
     <footer>
 
@@ -5115,36 +3956,36 @@ return res.send(`
 
             <div class="footer-top">
 
-
                 <div class="footer-brand">
 
                     <a
                         href="/dashboard"
-                        class="footer-brand-link"
+                        class="brand"
                     >
 
                         <img
+                            class="brand-logo"
                             src="/dashboard/assets/btw-mechanic-logo.png"
                             alt="BTW Mechanic"
                         >
 
-                        <span>
+                        <div class="brand-text">
 
-                            <span class="footer-brand-name">
+                            <span>
                                 BTW Mechanic
                             </span>
 
-                            <span class="footer-brand-subtitle">
+                            <span class="brand-subtitle">
                                 BEYOND TWO WHEELS
                             </span>
 
-                        </span>
+                        </div>
 
                     </a>
 
                     <p>
-                        Serving the Beyond Two Wheels
-                        Community, one crank at a time.
+                        Serving the Beyond Two Wheels Community,
+                        one crank at a time.
                     </p>
 
                 </div>
@@ -5160,16 +4001,14 @@ return res.send(`
                         Features
                     </a>
 
-                    <a href="#how-it-works">
-                        How It Works
+                    <a href="#dashboard">
+                        Dashboard
                     </a>
 
-                    <a href="#reviews">
-                        Reviews
-                    </a>
-
-                    <a href="#community">
-                        Community
+                    <a
+                        href="/dashboard/auth/discord"
+                    >
+                        Login
                     </a>
 
                 </div>
@@ -5224,7 +4063,6 @@ return res.send(`
 
                 </div>
 
-
             </div>
 
 
@@ -5244,7 +4082,6 @@ return res.send(`
         </div>
 
     </footer>
-
 
 </body>
 
