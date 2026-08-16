@@ -3409,7 +3409,7 @@ return res.send(`
 
                 <img
                     class="brand-logo"
-                    src="http://cdn.discordapp.com/attachments/1536434813735796906/1538561375314386954/e90d09_fb59c3740e8240f0b52f3935d2ab346emv2_1.png"
+                    src="https://cdn.discordapp.com/attachments/1536434813735796906/1538561375314386954/e90d09_fb59c3740e8240f0b52f3935d2ab346emv2_1.png"
                     alt="BTW Mechanic"
                 >
 
@@ -3965,7 +3965,7 @@ return res.send(`
 
                         <img
                             class="brand-logo"
-                            src="http://cdn.discordapp.com/attachments/1536434813735796906/1538561375314386954/e90d09_fb59c3740e8240f0b52f3935d2ab346emv2_1.png"
+                            src="https://cdn.discordapp.com/attachments/1536434813735796906/1538561375314386954/e90d09_fb59c3740e8240f0b52f3935d2ab346emv2_1.png"
                             alt="BTW Mechanic"
                         >
 
